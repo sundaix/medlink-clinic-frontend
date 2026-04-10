@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedLink Clinic — Chat with a Doctor</title>
+  <meta name="description" content="Chat with MedLink Clinic doctors. Get instant automated guidance on your health concerns.">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="xstyle.css">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  
+  <!-- Firebase Config -->
+  <script src="firebase-config.js"></script>
+
+  <style>
+  :root {
+    --primary:   #7dd3c9;
+    --primary-dark: #5bc0b5;
+    --primary-darker: #4a9d96;
+    --dark:      #50372c;
+    --grad:      linear-gradient(135deg, #7dd3c9 0%, #5bc0b5 50%, #4a9d96 100%);
+    --surface:   #f4fcfb;
+    --border:    rgba(125,211,201,0.2);
+    --shadow-sm: 0 4px 12px rgba(74,157,150,0.08);
+    --shadow-md: 0 8px 24px rgba(74,157,150,0.12);
+    --shadow-lg: 0 24px 64px rgba(74,157,150,0.16);
+    --ease:      cubic-bezier(0.22,1,0.36,1);
+    --r:         22px;
+    --navbar-height: 76px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter','Segoe UI',sans-serif;background:#edf8f7;color:var(--dark);min-height:100vh;padding-top:0;margin:0;}
+
+  /* Fixed Navbar - properly positioned */
+  .navbar-custom {
+    background: var(--grad);
+    padding: 12px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+  }
+
+  /* Add padding to body to account for fixed navbar */
+  body {
+    padding-top: var(--navbar-height);
+  }
+
+  /* ── HERO ── */
+  .chat-hero {
+    background: var(--grad);
+    padding: 48px 0 56px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0;
+  }
+  .chat-hero::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 10% 20%,rgba(255,255,255,.12) 0%,transparent 45%),radial-gradient(circle at 85% 75%,rgba(255,255,255,.09) 0%,transparent 40%);
+    pointer-events:none;
+  }
+  .chat-hero .container{position:relative;z-index:2;}
+  .chat-hero h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1.15;}
+  .chat-hero p{color:rgba(255,255,255,.82);font-weight:500;}
+  .hero-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:50px;
+    padding:6px 14px;
+    font-size:.78rem;
+    font-weight:700;
+    color:#fff;
+    letter-spacing:.3px;
+    margin-bottom:14px;
+  }
+  .hero-badge-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#86efac;
+    box-shadow:0 0 0 3px rgba(134,239,172,.3);
+    animation:heroPing 2s ease-in-out infinite;
+  }
+  @keyframes heroPing{
+    0%,100%{box-shadow:0 0 0 3px rgba(134,239,172,.3);}
+    50%{box-shadow:0 0 0 6px rgba(134,239,172,0);}
+  }
+
+  /* ── SHELL ── */
+  .chat-shell-wrap {
+    max-width: 1400px;
+    margin: 24px auto 48px;
+    padding: 0 20px;
+  }
+  .chat-shell {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    border-radius: var(--r);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: #fff;
+    height: calc(100vh - 280px);
+    min-height: 560px;
+    max-height: 750px;
+  }
+
+  /* ── SIDEBAR with Specialties ── */
+  .sidebar{
+    display:flex;
+    flex-direction:column;
+    background:var(--surface);
+    border-right:1px solid var(--border);
+    overflow:hidden;
+  }
+  .sidebar-head{
+    background:var(--grad);
+    padding:20px 18px 16px;
+    flex-shrink:0;
+  }
+  .sidebar-head-label{
+    font-size:.67rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    color:rgba(255,255,255,.7);
+    margin-bottom:2px;
+  }
+  .sidebar-head-title{
+    font-size:1rem;
+    font-weight:800;
+    color:#fff;
+  }
+  .sidebar-head-sub{
+    font-size:.74rem;
+    color:rgba(255,255,255,.6);
+    margin-top:2px;
+  }
+  .sidebar-search-wrap{
+    padding:12px 14px;
+    border-bottom:1px solid var(--border);
+    flex-shrink:0;
+  }
+  .sidebar-search{
+    position:relative;
+  }
+  .sidebar-search i{
+    position:absolute;
+    left:11px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--primary-darker);
+    font-size:.75rem;
+    pointer-events:none;
+  }
+  .sidebar-search input{
+    width:100%;
+    border:1.5px solid var(--border);
+    border-radius:50px;
+    padding:8px 14px 8px 32px;
+    font-size:.8rem;
+    font-family:inherit;
+    color:var(--dark);
+    background:#fff;
+    outline:none;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  .sidebar-search input:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(125,211,201,.18);
+  }
+
+  /* Specialty Sections */
+  .specialties-container{
+    flex:1;
+    overflow-y:auto;
+    padding:8px 0 12px;
+    scrollbar-width:thin;
+  }
+  .specialties-container::-webkit-scrollbar{
+    width:4px;
+  }
+  .specialties-container::-webkit-scrollbar-track{
+    background:rgba(125,211,201,.1);
+    border-radius:4px;
+  }
+  .specialties-container::-webkit-scrollbar-thumb{
+    background:rgba(125,211,201,.3);
+    border-radius:4px;
+  }
+  .specialty-group{margin-bottom:8px;}
+  .specialty-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 16px;
+    cursor:pointer;
+    transition:background .2s ease;
+    border-radius:12px;
+    margin:0 8px;
+  }
+  .specialty-header:hover{background:rgba(125,211,201,.1);}
+  .specialty-info{display:flex;align-items:center;gap:10px;}
+  .specialty-icon{
+    width:32px;
+    height:32px;
+    border-radius:10px;
+    background:var(--grad);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:.8rem;
+  }
+  .specialty-name{font-weight:700;font-size:.85rem;color:var(--dark);}
+  .specialty-count{
+    font-size:.7rem;
+    color:var(--primary-darker);
+    background:rgba(74,157,150,.12);
+    padding:2px 8px;
+    border-radius:20px;
+    margin-left:8px;
+  }
+  .specialty-chevron{
+    color:var(--primary-darker);
+    font-size:.7rem;
+    transition:transform .2s;
+  }
+  .specialty-chevron.rotated{transform:rotate(90deg);}
+  
+  .doctors-list{
+    padding:4px 8px 8px 32px;
+    display:none;
+    border-left:2px solid rgba(125,211,201,.3);
+    margin-left:24px;
+  }
+  .doctors-list.expanded{display:block;}
+  
+  .doc-card{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 12px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:all .2s var(--ease);
+    margin-bottom:2px;
+  }
+  .doc-card:hover{
+    background:rgba(125,211,201,.1);
+    transform:translateX(4px);
+  }
+  .doc-card.active{
+    background:rgba(125,211,201,.16);
+    box-shadow:inset 3px 0 0 var(--primary-darker);
+  }
+  .doc-av{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:var(--grad);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-weight:700;
+    font-size:.75rem;
+    flex-shrink:0;
+    box-shadow:0 2px 6px rgba(74,157,150,.2);
+  }
+  .doc-info{flex:1;min-width:0;}
+  .doc-name{
+    font-size:.8rem;
+    font-weight:700;
+    color:var(--dark);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .doc-spec{
+    font-size:.65rem;
+    font-weight:600;
+    color:var(--primary-darker);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .doc-status{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    flex-shrink:0;
+    background:#4ade80;
+    box-shadow:0 0 0 2px rgba(74,222,128,.2);
+  }
+  .doc-status.off{background:#94a3b8;box-shadow:0 0 0 2px rgba(148,163,184,.2);}
+
+  /* Empty state */
+  .no-doctors{text-align:center;padding:40px 20px;color:#b0c4c2;font-size:.85rem;}
+
+  /* ── CHAT PANEL ── */
+  .chat-panel{
+    display:flex;
+    flex-direction:column;
+    background:#fff;
+    overflow:hidden;
+  }
+  .chat-topbar{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 20px;
+    border-bottom:1px solid var(--border);
+    background:#fff;
+    flex-shrink:0;
+  }
+  .topbar-av{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--grad);
+    color:#fff;
+    font-weight:800;
+    font-size:.9rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    box-shadow:0 2px 8px rgba(74,157,150,.3);
+  }
+  .topbar-info{flex:1;min-width:0;}
+  .topbar-name{font-weight:800;font-size:.92rem;color:var(--dark);line-height:1.2;}
+  .topbar-status{font-size:.72rem;font-weight:600;display:flex;align-items:center;gap:5px;margin-top:1px;}
+  .t-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;flex-shrink:0;}
+  .t-dot.off{background:#94a3b8;}
+  .topbar-actions{display:flex;gap:6px;}
+  .t-btn{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:1.5px solid var(--border);
+    background:transparent;
+    color:var(--primary-darker);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:.8rem;
+    transition:all .18s var(--ease);
+  }
+  .t-btn:hover{
+    background:rgba(125,211,201,.14);
+    border-color:var(--primary);
+    transform:scale(1.08);
+  }
+
+  /* Messages area */
+  .chat-messages{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 20px 8px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    scroll-behavior:smooth;
+    scrollbar-width:thin;
+  }
+  .chat-messages::-webkit-scrollbar{width:4px;}
+  .chat-messages::-webkit-scrollbar-track{background:rgba(125,211,201,.1);border-radius:4px;}
+  .chat-messages::-webkit-scrollbar-thumb{background:rgba(125,211,201,.3);border-radius:4px;}
+  
+  .msg-date{
+    text-align:center;
+    font-size:.68rem;
+    font-weight:700;
+    color:#b0c4c2;
+    margin:8px 0 4px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .msg-date::before,.msg-date::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:rgba(125,211,201,.18);
+  }
+  .msg-row{
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    opacity:0;
+    animation:slideIn .35s var(--ease) forwards;
+    margin-bottom:2px;
+  }
+  @keyframes slideIn{
+    from{opacity:0;transform:translateY(12px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  .msg-row.patient{flex-direction:row-reverse;}
+  .msg-av{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.65rem;
+    font-weight:800;
+    flex-shrink:0;
+  }
+  .msg-av.doc-av-msg{background:var(--grad);color:#fff;}
+  .msg-av.pat-av-msg{background:linear-gradient(135deg,#64748b,#475569);color:#fff;}
+  .bubble-wrap{
+    display:flex;
+    flex-direction:column;
+    max-width:65%;
+  }
+  .msg-row.patient .bubble-wrap{align-items:flex-end;}
+  .bubble{
+    padding:10px 14px;
+    border-radius:16px;
+    font-size:.855rem;
+    line-height:1.58;
+    word-break:break-word;
+  }
+  .bubble.doc{
+    background:var(--surface);
+    color:var(--dark);
+    border:1px solid rgba(125,211,201,.22);
+    border-bottom-left-radius:4px;
+  }
+  .bubble.pat{
+    background:var(--grad);
+    color:#fff;
+    border-bottom-right-radius:4px;
+  }
+  .bubble-meta{
+    font-size:.63rem;
+    color:#b0c4c2;
+    margin-top:3px;
+    display:flex;
+    align-items:center;
+    gap:4px;
+  }
+  .typing-row{
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    padding:4px 20px;
+    opacity:0;
+    animation:slideIn .3s var(--ease) .05s forwards;
+  }
+  .typing-bubble{
+    background:var(--surface);
+    border:1px solid rgba(125,211,201,.22);
+    border-radius:16px;
+    border-bottom-left-radius:4px;
+    padding:12px 16px;
+    display:flex;
+    gap:5px;
+    align-items:center;
+  }
+  .typing-bubble span{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--primary);
+    animation:dot 1.3s ease-in-out infinite;
+  }
+  .typing-bubble span:nth-child(2){animation-delay:.2s;}
+  .typing-bubble span:nth-child(3){animation-delay:.4s;}
+  @keyframes dot{
+    0%,60%,100%{transform:translateY(0);opacity:.4;}
+    30%{transform:translateY(-5px);opacity:1;}
+  }
+
+  .choices-wrap{
+    padding:6px 20px 10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    flex-shrink:0;
+  }
+  .c-btn{
+    border:1.5px solid rgba(125,211,201,.55);
+    background:rgba(125,211,201,.06);
+    color:var(--primary-darker);
+    border-radius:50px;
+    padding:7px 16px;
+    font-size:.8rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .18s var(--ease);
+  }
+  .c-btn:hover{
+    background:var(--primary);
+    border-color:var(--primary);
+    color:#fff;
+    transform:translateY(-2px);
+  }
+  .c-btn:disabled{opacity:.35;cursor:default;}
+
+  .book-cta{
+    margin:2px 20px 10px;
+    background:linear-gradient(135deg,rgba(125,211,201,.1),rgba(74,157,150,.07));
+    border:1.5px solid rgba(125,211,201,.28);
+    border-radius:14px;
+    padding:14px 16px;
+    display:none;
+    flex-shrink:0;
+  }
+  .book-cta.show{display:flex;align-items:center;gap:14px;}
+  .book-cta a{
+    flex-shrink:0;
+    background:var(--grad);
+    color:#fff;
+    text-decoration:none;
+    border-radius:50px;
+    padding:8px 18px;
+    font-size:.78rem;
+    font-weight:700;
+    transition:all .18s var(--ease);
+  }
+  .book-cta a:hover{transform:translateY(-2px);}
+
+  .input-bar{
+    padding:12px 16px;
+    border-top:1px solid var(--border);
+    background:#fff;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+  }
+  .input-field-wrap{
+    flex:1;
+    display:flex;
+    align-items:center;
+    background:var(--surface);
+    border:1.5px solid var(--border);
+    border-radius:50px;
+    padding:0 14px;
+    gap:8px;
+  }
+  .input-field-wrap:focus-within{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(125,211,201,.16);
+  }
+  .input-field-wrap input{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:.85rem;
+    padding:10px 0;
+  }
+  .input-field-wrap input::placeholder{color:#b0c4c2;}
+  .send-btn{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--grad);
+    border:none;
+    color:#fff;
+    cursor:pointer;
+    transition:all .18s var(--ease);
+  }
+  .send-btn:hover{transform:scale(1.1);}
+  .chat-disclaimer{
+    text-align:center;
+    font-size:.67rem;
+    color:#b0c4c2;
+    padding:4px 16px 10px;
+    flex-shrink:0;
+  }
+
+  /* Loading state */
+  .loading-doctors{
+    text-align:center;
+    padding:40px 20px;
+    color:var(--primary-darker);
+  }
+  .loading-spinner-small{
+    display:inline-block;
+    width:20px;
+    height:20px;
+    border:2px solid var(--border);
+    border-top-color:var(--primary);
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin-right:8px;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* Navbar styles */
+  .navbar-logo{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid rgba(255,255,255,.3);
+  }
+  .nav-btn-login{
+    border:1.5px solid rgba(255,255,255,.55)!important;
+    border-radius:50px!important;
+    padding:7px 18px!important;
+    font-weight:700!important;
+    color:rgba(255,255,255,.9)!important;
+  }
+  .nav-btn-signup{
+    background:rgba(255,255,255,.22)!important;
+    border-radius:50px!important;
+    padding:7px 18px!important;
+    font-weight:700!important;
+    color:#fff!important;
+  }
+  .patient-avatar{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:rgba(255,255,255,.3);
+    color:#fff;
+    font-size:.75rem;
+    font-weight:800;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* Responsive */
+  @media(max-width:860px){
+    .chat-shell{grid-template-columns:280px 1fr;}
+  }
+  @media(max-width:680px){
+    .chat-shell-wrap{padding:0 12px;}
+    .chat-shell{
+      grid-template-columns:1fr;
+      grid-template-rows:auto 1fr;
+      height:auto;
+      max-height: none;
+    }
+    .sidebar{
+      border-right:none;
+      border-bottom:1px solid var(--border);
+      max-height:280px;
+    }
+    .specialties-container{
+      display:flex;
+      flex-direction:row;
+      overflow-x:auto;
+      padding:8px;
+      gap:8px;
+    }
+    .specialty-group{min-width:200px;margin-right:8px;}
+    .doctors-list{padding-left:16px;}
+    .bubble-wrap{max-width:80%;}
+    .chat-hero{padding:30px 0 40px;}
+  }
+  @media(max-width:576px){
+    .chat-messages{padding:14px 12px 6px;}
+    .choices-wrap{padding:4px 12px 8px;}
+    .input-bar{padding:10px 12px;}
+    .book-cta{margin:2px 12px 8px;flex-direction:column;align-items:flex-start;}
+  }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+      <img src="MedLinkLogo.png" alt="MedLink" class="navbar-logo me-2" loading="lazy">
+      MedLink Clinic
+    </a>
+    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html#services">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#booking">Book Appointment</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#contact">Contact</a></li>
+        <li class="nav-item"><a class="nav-link fw-bold" href="chat.html" style="color:rgba(255,255,255,.95)!important;"><i class="fas fa-comments me-1"></i>Chat</a></li>
+        <li class="nav-item" id="navGuest" style="display:flex;align-items:center;gap:6px;">
+          <a class="nav-link nav-btn-login" href="patient-login.html"><i class="fas fa-sign-in-alt me-1"></i>Sign In</a>
+          <a class="nav-link nav-btn-signup" href="register.html"><i class="fas fa-user-plus me-1"></i>Sign Up</a>
+        </li>
+        <li class="nav-item dropdown" id="navPatient" style="display:none;">
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown" style="background:rgba(255,255,255,.18);border-radius:50px;padding:7px 16px;">
+            <span class="patient-avatar" id="navAvatar">P</span>
+            <span id="navPatientName">Patient</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" onclick="patientLogout()">Sign Out</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO - Reduced padding to prevent cropping -->
+<div class="chat-hero">
+  <div class="container text-center">
+    <div class="hero-badge"><div class="hero-badge-dot"></div>Doctors Online Now</div>
+    <h1 class="mb-3">Chat with a Doctor</h1>
+    <p class="lead mb-0">Choose a specialty, select a doctor, and get instant guidance on your concern.</p>
+  </div>
+</div>
+
+<!-- CHAT SHELL -->
+<div class="chat-shell-wrap">
+  <div class="chat-shell">
+
+    <!-- SIDEBAR with Specialties -->
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <div class="sidebar-head-label">MedLink Specialists</div>
+        <div class="sidebar-head-title">Departments</div>
+        <div class="sidebar-head-sub" id="doctorCountDisplay">Loading doctors...</div>
+      </div>
+      <div class="sidebar-search-wrap">
+        <div class="sidebar-search">
+          <i class="fas fa-search"></i>
+          <input type="text" id="doctorSearch" placeholder="Search doctor or specialty…" oninput="filterDoctorsAndSpecialties(this.value)">
+        </div>
+      </div>
+      <div class="specialties-container" id="specialtiesContainer">
+        <div class="loading-doctors">
+          <div class="loading-spinner-small"></div> Loading doctors...
+        </div>
+      </div>
+    </aside>
+
+    <!-- CHAT PANEL -->
+    <div class="chat-panel">
+      <div class="chat-topbar">
+        <div class="topbar-av" id="topbarAv">?</div>
+        <div class="topbar-info">
+          <div class="topbar-name" id="topbarName">Select a Doctor</div>
+          <div class="topbar-status">
+            <div class="t-dot" id="topbarDot"></div>
+            <span id="topbarStatusText">Choose a specialty and doctor</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button class="t-btn" onclick="window.location.href='index.html#booking'" title="Book Appointment"><i class="fas fa-calendar-plus"></i></button>
+          <button class="t-btn" onclick="resetChat()" title="New Chat"><i class="fas fa-rotate-right"></i></button>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages" style="display:none;"></div>
+      <div class="typing-row" id="typingRow" style="display:none;">
+        <div class="msg-av doc-av-msg" id="typingAv">D</div>
+        <div class="typing-bubble"><span></span><span></span><span></span></div>
+      </div>
+      <div class="choices-wrap" id="choicesWrap" style="display:none;"></div>
+      <div class="book-cta" id="bookCta">
+        <div class="book-cta-text">
+          <p><i class="fas fa-calendar-check me-2" style="color:#22c55e;"></i>Ready to see the doctor?</p>
+          <span>Book an in-person appointment for a proper evaluation</span>
+        </div>
+        <a href="index.html#booking">Book Now <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="input-bar" id="inputBar" style="display:none;">
+        <div class="input-field-wrap">
+          <input type="text" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendFreeText()">
+        </div>
+        <button class="send-btn" onclick="sendFreeText()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+      <div class="chat-disclaimer" id="chatDisclaimer" style="display:none;">
+        <i class="fas fa-shield-alt me-1"></i> For informational guidance only — not a substitute for professional medical advice.
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="py-4 text-white" style="background:var(--grad)">
+  <div class="container text-center">
+    <p class="mb-0" style="font-size:.85rem;">© 2025 MedLink Clinic. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   ENHANCED CHAT SYSTEM - FIREBASE INTEGRATION
+   ═══════════════════════════════════════════════════════════ */
+
+// ========== STATE ==========
+let selectedDoctor = null;
+let patientInitials = 'ME';
+let lastSender = null;
+let msgCount = 0;
+let doctorsData = [];
+let specialtiesData = [];
+let doctorsBySpecialty = {};
+
+// ========== FALLBACK DOCTORS ==========
+const FALLBACK_DOCTORS = [
+  { id: 'dr-maria-santos', name: 'Dr. Maria Santos', specialty: 'General Medicine', shiftStart: '08:00', shiftEnd: '20:00', status: 'available', initials: 'MS' },
+  { id: 'dr-jose-reyes', name: 'Dr. Jose Reyes', specialty: 'Family Medicine', shiftStart: '08:00', shiftEnd: '20:00', status: 'available', initials: 'JR' },
+  { id: 'dr-ana-cruz', name: 'Dr. Ana Cruz', specialty: 'Internal Medicine', shiftStart: '08:00', shiftEnd: '20:00', status: 'available', initials: 'AC' },
+  { id: 'dr-carlo-bautista', name: 'Dr. Carlo Bautista', specialty: 'Pediatrics', shiftStart: '08:00', shiftEnd: '20:00', status: 'available', initials: 'CB' },
+  { id: 'dr-rosa-villanueva', name: 'Dr. Rosa Villanueva', specialty: 'Ophthalmology', shiftStart: '08:00', shiftEnd: '20:00', status: 'available', initials: 'RV' },
+  { id: 'dr-ramon-garcia', name: 'Dr. Ramon Garcia', specialty: 'Orthopedics', shiftStart: '08:00', shiftEnd: '20:00', status: 'available', initials: 'RG' },
+  { id: 'dr-ligaya-dela-rosa', name: 'Dr. Ligaya Dela Rosa', specialty: 'OB-GYN', shiftStart: '08:00', shiftEnd: '20:00', status: 'available', initials: 'LD' },
+  { id: 'dr-ben-aquino', name: 'Dr. Ben Aquino', specialty: 'ENT', shiftStart: '08:00', shiftEnd: '20:00', status: 'available', initials: 'BA' },
+  { id: 'dr-ines-mercado', name: 'Dr. Ines Mercado', specialty: 'Pathology & Lab Services', shiftStart: '08:00', shiftEnd: '20:00', status: 'available', initials: 'IM' }
+];
+
+const FALLBACK_SPECIALTIES = ['General Medicine', 'Family Medicine', 'Internal Medicine', 'Pediatrics', 'Ophthalmology', 'Orthopedics', 'OB-GYN', 'ENT', 'Pathology & Lab Services'];
+
+// ========== DECISION TREES ==========
+const TREES = {
+  gen:{start:{msg:"What is your main concern today?",choices:[{label:"🤒 Fever / Flu",next:'fever'},{label:"😣 Body Pain",next:'pain'},{label:"🤢 Nausea / Vomiting",next:'nausea'},{label:"😴 Fatigue / Weakness",next:'fatigue'},{label:"Something else",next:'other'}]},fever:{msg:"How long have you had the fever?",choices:[{label:"Less than 2 days",next:'fever_short'},{label:"3–5 days",next:'fever_med'},{label:"More than 5 days",next:'fever_long'}]},fever_short:{msg:"For a mild fever under 2 days, try rest, hydration, and paracetamol. If fever exceeds 38.5°C or persists beyond 2 days, please schedule a visit.",choices:[],bookCta:true},fever_med:{msg:"A fever lasting 3–5 days warrants clinical evaluation. I recommend booking an appointment.",choices:[],bookCta:true},fever_long:{msg:"A fever lasting more than 5 days requires urgent evaluation. Please visit us as soon as possible.",choices:[],bookCta:true},pain:{msg:"Where is the pain located?",choices:[{label:"Head",next:'headache'},{label:"Chest",next:'chest'},{label:"Abdomen",next:'abdo'},{label:"Back",next:'back'}]},headache:{msg:"How would you describe your headache?",choices:[{label:"New or unusually severe",next:'headache_severe'},{label:"Recurring for weeks",next:'headache_chronic'},{label:"Mild, occasional",next:'headache_mild'}]},headache_severe:{msg:"⚠️ A sudden severe headache with stiff neck or vision changes requires emergency care. Please seek immediate medical attention.",choices:[],bookCta:false},headache_chronic:{msg:"Recurring headaches should be evaluated. Please book a consultation.",choices:[],bookCta:true},headache_mild:{msg:"Mild headaches are usually tension or dehydration related. Rest and stay hydrated.",choices:[],bookCta:true},chest:{msg:"Chest pain can be serious. Are you experiencing shortness of breath or pain radiating to arm/jaw?",choices:[{label:"Yes - shortness of breath",next:'chest_emergency'},{label:"Yes - pain to arm/jaw",next:'chest_emergency'},{label:"No - just mild discomfort",next:'chest_mild'}]},chest_emergency:{msg:"⚠️ These symptoms may indicate a cardiac emergency. Please call emergency services (911) or go to the nearest ER immediately.",choices:[],bookCta:false},chest_mild:{msg:"Mild chest discomfort without other symptoms could be muscular or acid reflux. However, any chest pain should be evaluated.",choices:[],bookCta:true},abdo:{msg:"How would you describe the abdominal pain?",choices:[{label:"Sharp, sudden, severe",next:'abdo_severe'},{label:"Cramping",next:'abdo_cramp'},{label:"Dull, persistent ache",next:'abdo_dull'}]},abdo_severe:{msg:"⚠️ Severe sudden abdominal pain can indicate appendicitis or other emergencies. Please seek emergency care.",choices:[],bookCta:false},abdo_cramp:{msg:"Cramping pain may be related to IBS, gas, or menstruation. If accompanied by fever or vomiting, please consult.",choices:[],bookCta:true},abdo_dull:{msg:"A persistent dull ache could be from ulcers or other issues. Please schedule an appointment.",choices:[],bookCta:true},back:{msg:"Did the back pain come after an injury or gradually?",choices:[{label:"After injury/fall",next:'back_injury'},{label:"Gradually over time",next:'back_gradual'}]},back_injury:{msg:"If you injured your back with numbness or weakness in legs, please visit promptly.",choices:[],bookCta:true},back_gradual:{msg:"Gradual back pain is often muscular or postural. Rest and gentle stretching may help.",choices:[],bookCta:true},other:{msg:"For the best assistance, please consider booking an appointment so our doctors can properly evaluate you.",choices:[],bookCta:true}},
+  ped:{start:{msg:"What is your child's main concern today?",choices:[{label:"🤒 Fever",next:'fever'},{label:"😮 Cough/Colds",next:'cough'},{label:"😢 Stomach pain",next:'stomach'},{label:"💉 Vaccines",next:'vaccine'}]},fever:{msg:"How old is the child?",choices:[{label:"Under 3 months old",next:'fever_infant'},{label:"3 months - 2 years",next:'fever_toddler'},{label:"3 years and older",next:'fever_older'}]},fever_infant:{msg:"⚠️ Any fever in a baby under 3 months old is a medical emergency. Please go to the ER immediately.",choices:[],bookCta:false},fever_toddler:{msg:"Monitor for seizures and keep hydrated. Please book an appointment.",choices:[],bookCta:true},fever_older:{msg:"Ensure rest and hydration. If fever exceeds 39°C or lasts more than 2 days, please consult.",choices:[],bookCta:true},cough:{msg:"How long has the child had the cough?",choices:[{label:"Less than 3 days",next:'cough_short'},{label:"More than 1 week",next:'cough_long'},{label:"Difficulty breathing",next:'cough_serious'}]},cough_short:{msg:"Short-term coughs are usually viral. Use a cool-mist humidifier and keep child hydrated.",choices:[],bookCta:true},cough_long:{msg:"A cough lasting more than a week should be evaluated.",choices:[],bookCta:true},cough_serious:{msg:"⚠️ Difficulty breathing requires immediate attention. Please bring the child to the clinic or ER.",choices:[],bookCta:false},stomach:{msg:"Is the child also experiencing diarrhea or vomiting?",choices:[{label:"Vomiting + Diarrhea",next:'gastro'},{label:"Just stomach pain",next:'stomachpain'}]},gastro:{msg:"Offer ORS frequently. If child refuses fluids or shows dehydration signs, seek care.",choices:[],bookCta:true},stomachpain:{msg:"If pain is severe or localized to lower right abdomen, seek emergency care.",choices:[],bookCta:true},vaccine:{msg:"Staying up-to-date on vaccinations is important! Please schedule a well-child visit.",choices:[],bookCta:true}},
+  oph:{start:{msg:"What is your eye concern today?",choices:[{label:"👁️ Blurry vision",next:'blur'},{label:"😣 Eye pain",next:'pain'},{label:"🔴 Red eyes",next:'red'}]},blur:{msg:"Did blurry vision come suddenly or gradually?",choices:[{label:"Suddenly",next:'blur_sudden'},{label:"Gradually",next:'blur_gradual'}]},blur_sudden:{msg:"⚠️ Sudden vision loss requires emergency eye care immediately.",choices:[],bookCta:false},blur_gradual:{msg:"Gradual blurring may indicate refractive error or cataracts. Please schedule an eye exam.",choices:[],bookCta:true},pain:{msg:"How would you describe the eye pain?",choices:[{label:"Sharp, severe",next:'pain_severe'},{label:"Mild ache",next:'pain_mild'}]},pain_severe:{msg:"⚠️ Severe eye pain with nausea or vision changes requires emergency care.",choices:[],bookCta:false},pain_mild:{msg:"Mild eye aches may be from eye strain. Rest your eyes and use lubricating drops.",choices:[],bookCta:true},red:{msg:"Are your red eyes accompanied by discharge?",choices:[{label:"Yes, discharge",next:'conjunctivitis'},{label:"No, just redness",next:'red_mild'}]},conjunctivitis:{msg:"This may be conjunctivitis. Please book an appointment for proper treatment.",choices:[],bookCta:true},red_mild:{msg:"Mild redness is often from dryness or fatigue. Try lubricating drops.",choices:[],bookCta:true}},
+  ort:{start:{msg:"What is your bone or joint concern?",choices:[{label:"🦵 Knee pain",next:'knee'},{label:"💪 Shoulder pain",next:'shoulder'},{label:"🦴 Back pain",next:'back'},{label:"🤕 Sports injury",next:'sports'}]},knee:{msg:"Did the knee pain come after an injury?",choices:[{label:"After injury",next:'knee_injury'},{label:"Gradually",next:'knee_gradual'}]},knee_injury:{msg:"If you heard a 'pop' or the knee locks, please see us urgently.",choices:[],bookCta:true},knee_gradual:{msg:"Gradual knee pain often suggests osteoarthritis. A consultation is recommended.",choices:[],bookCta:true},shoulder:{msg:"How did the shoulder pain start?",choices:[{label:"After lifting",next:'shoulder_strain'},{label:"Gradually, worse at night",next:'shoulder_chronic'}]},shoulder_strain:{msg:"Rest and ice the area. If pain persists beyond 5-7 days, please book an appointment.",choices:[],bookCta:true},shoulder_chronic:{msg:"Nighttime shoulder pain may indicate rotator cuff issues. Please schedule a consultation.",choices:[],bookCta:true},back:{msg:"Where in the back is the pain?",choices:[{label:"Lower back",next:'low_back'},{label:"Mid back",next:'mid_back'}]},low_back:{msg:"Lower back pain is often muscular. If it persists beyond 2 weeks, book an evaluation.",choices:[],bookCta:true},mid_back:{msg:"Mid-back pain can be from posture. Persistent pain warrants consultation.",choices:[],bookCta:true},sports:{msg:"What type of sports injury?",choices:[{label:"Sprain",next:'sprain'},{label:"Possible fracture",next:'fracture'}]},sprain:{msg:"Follow RICE protocol. If swelling is severe, an X-ray may be needed.",choices:[],bookCta:true},fracture:{msg:"If you suspect a fracture, please seek immediate care for X-rays.",choices:[],bookCta:true}},
+  obg:{start:{msg:"What women's health concern can I help with?",choices:[{label:"🤰 Pregnancy",next:'pregnancy'},{label:"📅 Irregular periods",next:'periods'},{label:"😣 Pelvic pain",next:'pelvic'},{label:"💊 Family planning",next:'family_planning'}]},pregnancy:{msg:"Are you currently pregnant or trying to conceive?",choices:[{label:"Currently pregnant",next:'preg_current'},{label:"Trying to conceive",next:'preg_ttc'}]},preg_current:{msg:"Regular prenatal check-ups are essential. For urgent concerns (bleeding, severe pain), go to the ER.",choices:[],bookCta:true},preg_ttc:{msg:"A pre-conception consultation helps optimize your health before pregnancy.",choices:[],bookCta:true},periods:{msg:"How are your periods irregular?",choices:[{label:"Very heavy bleeding",next:'heavy_period'},{label:"Missed periods",next:'missed_period'}]},heavy_period:{msg:"Heavy bleeding may indicate fibroids or hormonal imbalance. Please book a consultation.",choices:[],bookCta:true},missed_period:{msg:"Missed periods can be related to stress, PCOS, or thyroid issues. Please book an appointment.",choices:[],bookCta:true},pelvic:{msg:"How would you describe the pelvic pain?",choices:[{label:"Sudden and severe",next:'pelvic_severe'},{label:"Chronic",next:'pelvic_chronic'}]},pelvic_severe:{msg:"⚠️ Sudden severe pelvic pain may indicate ectopic pregnancy or ruptured cyst. Seek emergency care.",choices:[],bookCta:false},pelvic_chronic:{msg:"Chronic pelvic pain warrants a thorough evaluation. Please schedule an appointment.",choices:[],bookCta:true},family_planning:{msg:"A consultation will help determine the best family planning method for you.",choices:[],bookCta:true}},
+  ent:{start:{msg:"What is your ear, nose, or throat concern?",choices:[{label:"👂 Ear pain",next:'ear'},{label:"👃 Nasal congestion",next:'nose'},{label:"😮 Sore throat",next:'throat'}]},ear:{msg:"Is this ear pain or hearing loss?",choices:[{label:"Ear pain",next:'ear_pain'},{label:"Sudden hearing loss",next:'ear_sudden'}]},ear_pain:{msg:"Ear pain is often caused by infection or wax. Do NOT insert anything into the ear. Please book an appointment.",choices:[],bookCta:true},ear_sudden:{msg:"⚠️ Sudden hearing loss is a medical emergency. Seek ENT care within 24 hours.",choices:[],bookCta:true},nose:{msg:"How long have you had nasal congestion?",choices:[{label:"Less than 10 days",next:'nose_acute'},{label:"More than 12 weeks",next:'nose_chronic'}]},nose_acute:{msg:"Acute sinusitis often resolves in 7-10 days. See a doctor if symptoms worsen.",choices:[],bookCta:true},nose_chronic:{msg:"Chronic sinusitis needs evaluation to rule out polyps or structural issues.",choices:[],bookCta:true},throat:{msg:"How would you describe your sore throat?",choices:[{label:"Very painful with white patches",next:'throat_strep'},{label:"Mild with cough/cold",next:'throat_viral'}]},throat_strep:{msg:"This may indicate strep throat which requires antibiotics. Please book an appointment.",choices:[],bookCta:true},throat_viral:{msg:"Sore throat from a cold is usually viral and resolves in 5-7 days.",choices:[],bookCta:true}},
+  fam:{start:{msg:"Who is the patient today?",choices:[{label:"👶 Infant (0-2 years)",next:'infant'},{label:"🧒 Child (3-12 years)",next:'child'},{label:"👨 Adult (18-59 years)",next:'adult'},{label:"👴 Senior (60+ years)",next:'senior'}]},infant:{msg:"For infants, common concerns include feeding and fever. Is this urgent?",choices:[{label:"Urgent - fever",next:'infant_urgent'},{label:"Routine check-up",next:'infant_routine'}]},infant_urgent:{msg:"⚠️ Any fever in an infant under 3 months is an emergency. Go to the ER immediately.",choices:[],bookCta:false},infant_routine:{msg:"Regular well-baby visits and vaccinations are crucial. Please book an appointment.",choices:[],bookCta:true},child:{msg:"What is the child's main concern?",choices:[{label:"Fever/illness",next:'child_fever'},{label:"Routine check-up",next:'child_routine'}]},child_fever:{msg:"For children with fever, ensure hydration and appropriate medication. Seek care if fever exceeds 39°C.",choices:[],bookCta:true},child_routine:{msg:"Routine check-ups ensure your child is growing well. Please book an appointment.",choices:[],bookCta:true},adult:{msg:"What is your main health concern?",choices:[{label:"Chronic disease",next:'chronic'},{label:"Acute illness",next:'acute'},{label:"Annual check-up",next:'checkup'}]},chronic:{msg:"Managing chronic conditions requires regular monitoring. Please book a follow-up.",choices:[],bookCta:true},acute:{msg:"For acute illnesses, the sooner you're seen, the better. Please book an appointment.",choices:[],bookCta:true},checkup:{msg:"Annual check-ups are important for catching issues early. Please book your check-up.",choices:[],bookCta:true},senior:{msg:"What is the main concern for the senior?",choices:[{label:"Chronic disease",next:'chronic'},{label:"Memory concerns",next:'memory'}]},memory:{msg:"Memory concerns in older adults should be evaluated early. Please book an appointment.",choices:[],bookCta:true}},
+  int:{start:{msg:"What is your concern today?",choices:[{label:"🩸 Diabetes",next:'diabetes'},{label:"❤️ Hypertension",next:'cardio'},{label:"🫁 Breathing issues",next:'lung'}]},diabetes:{msg:"Are you already diagnosed with diabetes?",choices:[{label:"Already diagnosed",next:'dm_managing'},{label:"Suspect - frequent thirst/urination",next:'dm_suspect'}]},dm_managing:{msg:"Regular HbA1c checks and foot exams are key. Please schedule a follow-up.",choices:[],bookCta:true},dm_suspect:{msg:"A fasting blood glucose test will confirm this. Please book an appointment for blood work.",choices:[],bookCta:true},cardio:{msg:"Is your concern about high blood pressure or chest symptoms?",choices:[{label:"High blood pressure",next:'htn_managing'},{label:"Chest tightness",next:'chest_new'}]},htn_managing:{msg:"Take medications consistently and monitor BP at home. Regular follow-ups are important.",choices:[],bookCta:true},chest_new:{msg:"New chest tightness should not be ignored. Please book an urgent appointment.",choices:[],bookCta:true},lung:{msg:"What is your breathing concern?",choices:[{label:"Chronic cough/asthma",next:'asthma'},{label:"Shortness of breath",next:'sob'}]},asthma:{msg:"Ensure you're using inhalers correctly. If poorly controlled, please book an appointment.",choices:[],bookCta:true},sob:{msg:"Shortness of breath can indicate cardiac or pulmonary issues. A full work-up is needed.",choices:[],bookCta:true}},
+  pat:{start:{msg:"What lab service do you need?",choices:[{label:"🩸 Blood test",next:'blood'},{label:"🔬 Doctor ordered a test",next:'ordered'},{label:"📋 Understanding results",next:'results'}]},blood:{msg:"What blood test are you looking for?",choices:[{label:"Complete Blood Count (CBC)",next:'cbc'},{label:"Blood sugar",next:'glucose'},{label:"Cholesterol",next:'lipid'}]},cbc:{msg:"A CBC checks for anemia and infection. Book a lab appointment.",choices:[],bookCta:true},glucose:{msg:"Blood sugar tests help diagnose diabetes. Book a lab appointment.",choices:[],bookCta:true},lipid:{msg:"A lipid panel assesses cardiovascular risk. Book a lab visit.",choices:[],bookCta:true},ordered:{msg:"Bring your laboratory request form when you visit. Book a lab appointment.",choices:[],bookCta:true},results:{msg:"Lab results should always be interpreted by your attending physician. Please bring them to a consultation.",choices:[],bookCta:true}}
+};
+
+const specialtyToTreeKey = {
+  'General Medicine': 'gen',
+  'Family Medicine': 'fam',
+  'Internal Medicine': 'int',
+  'Pediatrics': 'ped',
+  'Ophthalmology': 'oph',
+  'Orthopedics': 'ort',
+  'OB-GYN': 'obg',
+  'ENT': 'ent',
+  'Pathology & Lab Services': 'pat'
+};
+
+// ========== FIREBASE DATA LOADING ==========
+async function loadDoctorsFromFirebase() {
+  try {
+    if (typeof firebase === 'undefined' || !firebase.database) return null;
+    const snapshot = await firebase.database().ref('doctors').once('value');
+    const doctors = snapshot.val() || {};
+    if (Object.keys(doctors).length === 0) return null;
+    
+    const loadedDoctors = [];
+    Object.entries(doctors).forEach(([id, doctor]) => {
+      loadedDoctors.push({
+        id: id,
+        name: doctor.name || id,
+        specialty: doctor.specialty || 'General Medicine',
+        shiftStart: doctor.shiftStart || '08:00',
+        shiftEnd: doctor.shiftEnd || '20:00',
+        status: getDoctorStatus(doctor.shiftStart, doctor.shiftEnd),
+        initials: getInitials(doctor.name || id)
+      });
+    });
+    return loadedDoctors;
+  } catch (error) {
+    console.error('Error loading doctors:', error);
+    return null;
+  }
+}
+
+async function loadSpecialtiesFromFirebase() {
+  try {
+    if (typeof firebase === 'undefined' || !firebase.database) return null;
+    const snapshot = await firebase.database().ref('specialties').once('value');
+    const specialties = snapshot.val() || {};
+    const loadedSpecialties = Object.values(specialties).map(s => typeof s === 'string' ? s : s.name);
+    return loadedSpecialties.length ? loadedSpecialties : null;
+  } catch (error) {
+    console.error('Error loading specialties:', error);
+    return null;
+  }
+}
+
+function getDoctorStatus(shiftStart, shiftEnd) {
+  const now = new Date();
+  const currentHour = now.getHours();
+  const [startHour] = (shiftStart || '08:00').split(':').map(Number);
+  const [endHour] = (shiftEnd || '20:00').split(':').map(Number);
+  
+  if (startHour > endHour) {
+    return (currentHour >= startHour || currentHour < endHour) ? 'available' : 'off';
+  }
+  return (currentHour >= startHour && currentHour < endHour) ? 'available' : 'off';
+}
+
+function getInitials(name) {
+  const parts = name.split(' ');
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.substring(0, 2).toUpperCase();
+}
+
+function groupDoctorsBySpecialty(doctors, specialties) {
+  const grouped = {};
+  specialties.forEach(s => { grouped[s] = []; });
+  doctors.forEach(doctor => {
+    const spec = doctor.specialty;
+    if (grouped[spec]) grouped[spec].push(doctor);
+    else grouped[spec] = [doctor];
+  });
+  Object.keys(grouped).forEach(spec => {
+    grouped[spec].sort((a, b) => a.name.localeCompare(b.name));
+  });
+  return grouped;
+}
+
+// ========== RENDER SIDEBAR ==========
+function renderSpecialtySidebar() {
+  const container = document.getElementById('specialtiesContainer');
+  if (!container) return;
+  
+  if (doctorsData.length === 0) {
+    container.innerHTML = '<div class="no-doctors">No doctors available at the moment.</div>';
+    document.getElementById('doctorCountDisplay').textContent = '0 specialists available';
+    return;
+  }
+  
+  doctorsBySpecialty = groupDoctorsBySpecialty(doctorsData, specialtiesData);
+  document.getElementById('doctorCountDisplay').textContent = `${doctorsData.length} specialists available`;
+  
+  let html = '';
+  specialtiesData.forEach(specialty => {
+    const doctorsInSpecialty = doctorsBySpecialty[specialty] || [];
+    if (doctorsInSpecialty.length === 0) return;
+    
+    const specialtyId = `spec-${specialty.replace(/[^a-zA-Z0-9]/g, '-')}`;
+    html += `
+      <div class="specialty-group">
+        <div class="specialty-header" onclick="toggleSpecialty('${specialtyId}')">
+          <div class="specialty-info">
+            <div class="specialty-icon"><i class="fas fa-stethoscope"></i></div>
+            <span class="specialty-name">${escapeHtml(specialty)}</span>
+            <span class="specialty-count">${doctorsInSpecialty.length}</span>
+          </div>
+          <i class="fas fa-chevron-right specialty-chevron rotated" id="chevron-${specialtyId}"></i>
+        </div>
+        <div class="doctors-list expanded" id="list-${specialtyId}">
+    `;
+    
+    doctorsInSpecialty.forEach(doctor => {
+      const isActive = selectedDoctor && selectedDoctor.id === doctor.id;
+      html += `
+        <div class="doc-card ${isActive ? 'active' : ''}" onclick="selectDoctorFromData('${escapeHtml(doctor.id)}')">
+          <div class="doc-av">${escapeHtml(doctor.initials)}</div>
+          <div class="doc-info">
+            <div class="doc-name">${escapeHtml(doctor.name)}</div>
+            <div class="doc-spec">${escapeHtml(doctor.specialty)}</div>
+          </div>
+          <div class="doc-status ${doctor.status === 'available' ? '' : 'off'}"></div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  });
+  
+  container.innerHTML = html || '<div class="no-doctors">No doctors available.</div>';
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m] || m));
+}
+
+function toggleSpecialty(specialtyId) {
+  const list = document.getElementById(`list-${specialtyId}`);
+  const chevron = document.getElementById(`chevron-${specialtyId}`);
+  if (list) {
+    list.classList.toggle('expanded');
+    if (chevron) chevron.classList.toggle('rotated');
+  }
+}
+
+function filterDoctorsAndSpecialties(searchTerm) {
+  if (!searchTerm.trim()) { renderSpecialtySidebar(); return; }
+  
+  const term = searchTerm.toLowerCase();
+  const filtered = doctorsData.filter(d => d.name.toLowerCase().includes(term) || d.specialty.toLowerCase().includes(term));
+  
+  const grouped = {};
+  filtered.forEach(d => {
+    if (!grouped[d.specialty]) grouped[d.specialty] = [];
+    grouped[d.specialty].push(d);
+  });
+  
+  const container = document.getElementById('specialtiesContainer');
+  let html = '';
+  Object.keys(grouped).sort().forEach(specialty => {
+    const specialtyId = `spec-${specialty.replace(/[^a-zA-Z0-9]/g, '-')}`;
+    html += `
+      <div class="specialty-group">
+        <div class="specialty-header" onclick="toggleSpecialty('${specialtyId}')">
+          <div class="specialty-info">
+            <div class="specialty-icon"><i class="fas fa-stethoscope"></i></div>
+            <span class="specialty-name">${escapeHtml(specialty)}</span>
+            <span class="specialty-count">${grouped[specialty].length}</span>
+          </div>
+          <i class="fas fa-chevron-right specialty-chevron rotated" id="chevron-${specialtyId}"></i>
+        </div>
+        <div class="doctors-list expanded" id="list-${specialtyId}">
+    `;
+    grouped[specialty].forEach(doctor => {
+      const isActive = selectedDoctor && selectedDoctor.id === doctor.id;
+      html += `
+        <div class="doc-card ${isActive ? 'active' : ''}" onclick="selectDoctorFromData('${escapeHtml(doctor.id)}')">
+          <div class="doc-av">${escapeHtml(doctor.initials)}</div>
+          <div class="doc-info">
+            <div class="doc-name">${escapeHtml(doctor.name)}</div>
+            <div class="doc-spec">${escapeHtml(doctor.specialty)}</div>
+          </div>
+          <div class="doc-status ${doctor.status === 'available' ? '' : 'off'}"></div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  });
+  container.innerHTML = html || '<div class="no-doctors">No doctors match your search.</div>';
+}
+
+// ========== SELECT DOCTOR ==========
+function selectDoctorFromData(doctorId) {
+  const doctor = doctorsData.find(d => d.id === doctorId);
+  if (!doctor) return;
+  
+  selectedDoctor = doctor;
+  lastSender = null;
+  msgCount = 0;
+  
+  renderSpecialtySidebar();
+  
+  document.getElementById('topbarAv').textContent = doctor.initials;
+  document.getElementById('topbarName').textContent = doctor.name;
+  document.getElementById('topbarDot').className = `t-dot ${doctor.status === 'available' ? '' : 'off'}`;
+  document.getElementById('topbarStatusText').textContent = doctor.status === 'available' ? `${doctor.specialty} · Online` : `${doctor.specialty} · Off Duty`;
+  document.getElementById('typingAv').textContent = doctor.initials;
+  
+  const msgs = document.getElementById('chatMessages');
+  msgs.style.display = 'flex';
+  msgs.innerHTML = '';
+  document.getElementById('choicesWrap').style.display = 'none';
+  document.getElementById('choicesWrap').innerHTML = '';
+  document.getElementById('bookCta').classList.remove('show');
+  document.getElementById('inputBar').style.display = 'flex';
+  document.getElementById('chatDisclaimer').style.display = 'block';
+  
+  addDateDivider();
+  
+  typingThen(() => {
+    addMsg(`Hello! I'm ${doctor.name}. How can I help you today?`, 'doc', doctor.initials);
+    typingThen(() => {
+      const treeKey = specialtyToTreeKey[doctor.specialty] || 'gen';
+      const tree = TREES[treeKey];
+      if (tree && tree.start) {
+        addMsg(tree.start.msg, 'doc', doctor.initials);
+        renderChoices(tree.start.choices);
+      } else {
+        addMsg("What health concern can I help you with today?", 'doc', doctor.initials);
+        renderChoices([{label:"General concern",next:''},{label:"Book appointment",next:''}]);
+      }
+    }, 700);
+  }, 900);
+}
+
+// ========== CHAT FUNCTIONS ==========
+function nowTime() { return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
+
+function addDateDivider() {
+  const d = document.createElement('div');
+  d.className = 'msg-date';
+  d.textContent = new Date().toLocaleDateString([],{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('chatMessages').appendChild(d);
+}
+
+function addMsg(text, side, avText) {
+  const msgs = document.getElementById('chatMessages');
+  const isPat = side === 'patient';
+  const same = (lastSender === side);
+  lastSender = side;
+  msgCount++;
+  
+  const row = document.createElement('div');
+  row.className = `msg-row${isPat?' patient':''}${same?' same-sender':''}`;
+  row.innerHTML = `
+    <div class="msg-av ${isPat ? 'pat-av-msg' : 'doc-av-msg'}">${isPat ? patientInitials : avText}</div>
+    <div class="bubble-wrap">
+      <div class="bubble ${isPat?'pat':'doc'}">${text}</div>
+      <div class="bubble-meta"><span>${nowTime()}</span></div>
+    </div>`;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() { document.getElementById('typingRow').style.display='flex'; }
+function hideTyping() { document.getElementById('typingRow').style.display='none'; }
+function typingThen(fn, delay=1000) { showTyping(); setTimeout(() => { hideTyping(); fn(); }, delay); }
+
+function renderChoices(choices) {
+  const w = document.getElementById('choicesWrap');
+  if (!choices?.length) { w.style.display='none'; w.innerHTML=''; return; }
+  w.style.display = 'flex';
+  w.innerHTML = choices.map(c => `<button class="c-btn" onclick="handleChoice(this,'${c.label.replace(/'/g,"\\'")}','${c.next}')">${c.label}</button>`).join('');
+}
+
+function handleChoice(btn, label, nextKey) {
+  if (!selectedDoctor) return;
+  document.querySelectorAll('.c-btn').forEach(b => b.disabled=true);
+  addMsg(label, 'patient', patientInitials);
+  
+  const treeKey = specialtyToTreeKey[selectedDoctor.specialty] || 'gen';
+  const node = TREES[treeKey]?.[nextKey];
+  typingThen(() => {
+    if (!node) {
+      addMsg("Thank you for sharing that. Please book an appointment for a thorough evaluation.",'doc',selectedDoctor.initials);
+      renderChoices([]);
+      showBookCta();
+      return;
+    }
+    addMsg(node.msg, 'doc', selectedDoctor.initials);
+    if (node.choices?.length) {
+      renderChoices(node.choices);
+    } else {
+      renderChoices([]);
+      if (node.bookCta !== false) showBookCta();
+      typingThen(() => addMsg("Is there anything else I can help you with? You can start a new chat using the ↺ button above.",'doc',selectedDoctor.initials), 900);
+    }
+  }, 500);
+}
+
+function sendFreeText() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || !selectedDoctor) return;
+  input.value = '';
+  addMsg(text, 'patient', patientInitials);
+  
+  const t = text.toLowerCase();
+  let r = '';
+  if (/emergency|can'?t breathe|heart attack|stroke/.test(t)) {
+    r = "⚠️ This sounds like a potential emergency. Please call emergency services (911) or go to the nearest ER immediately.";
+  } else if (/book|appointment|schedule|visit/.test(t)) {
+    r = "Of course! Click Book Now below to schedule an appointment.";
+    showBookCta();
+  } else if (/^(hello|hi|hey|good)/.test(t)) {
+    r = "Hello! How can I help you today?";
+  } else {
+    r = `Thank you for sharing. For a thorough evaluation, I recommend scheduling a consultation with our ${selectedDoctor.specialty} team.`;
+    showBookCta();
+  }
+  typingThen(() => addMsg(r, 'doc', selectedDoctor.initials), 700);
+}
+
+function showBookCta() { document.getElementById('bookCta').classList.add('show'); }
+function resetChat() { if (selectedDoctor) selectDoctorFromData(selectedDoctor.id); }
+
+// ========== SESSION ==========
+function loadSession() {
+  const raw = sessionStorage.getItem('medlink_user');
+  if (!raw) return;
+  try {
+    const u = JSON.parse(raw);
+    const fn = u.firstName || (u.fullName ? u.fullName.trim().split(/\s+/)[0] : 'P') || 'P';
+    const ln = u.lastName || (u.fullName ? u.fullName.trim().split(/\s+/).slice(-1)[0] : '') || '';
+    const f1 = fn[0] ? fn[0].toUpperCase() : 'P';
+    const f2 = ln[0] ? ln[0].toUpperCase() : fn[1] ? fn[1].toUpperCase() : f1;
+    patientInitials = f1 + f2;
+    
+    document.getElementById('navGuest').style.display = 'none';
+    document.getElementById('navPatient').style.display = 'block';
+    document.getElementById('navAvatar').textContent = patientInitials;
+    document.getElementById('navPatientName').textContent = fn;
+  } catch(e) {}
+}
+
+function patientLogout() {
+  sessionStorage.removeItem('medlink_user');
+  window.location.replace('landing.html');
+}
+
+// ========== INIT ==========
+async function init() {
+  loadSession();
+  
+  let fbDoctors = await loadDoctorsFromFirebase();
+  let fbSpecialties = await loadSpecialtiesFromFirebase();
+  
+  doctorsData = (fbDoctors && fbDoctors.length) ? fbDoctors : FALLBACK_DOCTORS;
+  specialtiesData = (fbSpecialties && fbSpecialties.length) ? fbSpecialties : FALLBACK_SPECIALTIES;
+  
+  renderSpecialtySidebar();
+  
+  const params = new URLSearchParams(window.location.search);
+  const doctorParam = params.get('doctor');
+  if (doctorParam) {
+    const found = doctorsData.find(d => d.id === doctorParam);
+    if (found) setTimeout(() => selectDoctorFromData(found.id), 500);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+window.patientLogout = patientLogout;
+window.selectDoctorFromData = selectDoctorFromData;
+window.toggleSpecialty = toggleSpecialty;
+window.filterDoctorsAndSpecialties = filterDoctorsAndSpecialties;
+window.handleChoice = handleChoice;
+window.sendFreeText = sendFreeText;
+window.resetChat = resetChat;
+</script>
+</body>
+</html>

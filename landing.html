@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedLink Clinic – Quality Healthcare in Marikina</title>
+  <meta name="description" content="MedLink Clinic provides quality healthcare services in Marikina with expert doctors and modern facilities. Book your appointment online today.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --teal-light:  #7dd3c9;
+      --teal-mid:    #5bc0b5;
+      --teal-dark:   #4a9d96;
+      --teal-deep:   #357870;
+      --warm-dark:   #50372c;
+      --cream:       #f5fffe;
+      --white:       #ffffff;
+      --grad: linear-gradient(135deg, #7dd3c9 0%, #5bc0b5 50%, #4a9d96 100%);
+      --grad-rev: linear-gradient(135deg, #4a9d96 0%, #5bc0b5 50%, #7dd3c9 100%);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      color: var(--warm-dark);
+      background: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════
+       NAV
+    ══════════════════════════════ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.4s, padding 0.4s, box-shadow 0.4s;
+    }
+    .nav.scrolled {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      padding: 12px 5%;
+      box-shadow: 0 4px 24px rgba(74,157,150,0.15);
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700; font-size: 1.35rem;
+      color: var(--white); text-decoration: none;
+      transition: color 0.4s;
+    }
+    .nav.scrolled .nav-brand { color: var(--teal-dark); }
+    .nav-logo {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.5);
+      object-fit: cover; transition: border-color 0.4s;
+      background: rgba(255,255,255,0.15);
+    }
+    .nav.scrolled .nav-logo { border-color: var(--teal-light); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-links a {
+      font-weight: 600; font-size: 0.88rem;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none; padding: 8px 14px;
+      border-radius: 50px; transition: all 0.3s;
+      letter-spacing: 0.3px;
+    }
+    .nav.scrolled .nav-links a { color: var(--teal-dark); }
+    .nav-links a:hover { background: rgba(255,255,255,0.15); color: #fff; }
+    .nav.scrolled .nav-links a:hover { background: rgba(125,211,201,0.15); color: var(--teal-dark); }
+
+    .btn-nav-login {
+      border: 2px solid rgba(255,255,255,0.6) !important;
+      color: rgba(255,255,255,0.9) !important;
+    }
+    .nav.scrolled .btn-nav-login {
+      border-color: var(--teal-mid) !important;
+      color: var(--teal-dark) !important;
+    }
+    .btn-nav-register {
+      background: rgba(255,255,255,0.25) !important;
+      color: #fff !important;
+      border: none !important;
+    }
+    .nav.scrolled .btn-nav-register {
+      background: var(--grad) !important;
+      color: #fff !important;
+    }
+
+    .hamburger {
+      display: none; background: none; border: none;
+      cursor: pointer; padding: 4px;
+      flex-direction: column; gap: 5px;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: #fff; border-radius: 2px; transition: all 0.3s;
+    }
+    .nav.scrolled .hamburger span { background: var(--teal-dark); }
+
+    /* ══════════════════════════════
+       HERO
+    ══════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      background: var(--grad);
+      position: relative;
+      display: flex; align-items: center;
+      overflow: hidden;
+      padding: 120px 5% 80px;
+    }
+
+    /* Decorative circles */
+    .hero-circle {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      pointer-events: none;
+    }
+    .hc1 { width: 600px; height: 600px; top: -200px; right: -150px; animation: rotate 30s linear infinite; }
+    .hc2 { width: 400px; height: 400px; bottom: -150px; left: -80px; animation: rotate 20s linear infinite reverse; }
+    .hc3 { width: 200px; height: 200px; top: 30%; right: 15%; animation: float 6s ease-in-out infinite; }
+    .hc4 { width: 120px; height: 120px; top: 15%; left: 40%; animation: float 8s ease-in-out infinite 2s; }
+
+    /* Grid pattern overlay */
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* Medical cross watermarks */
+    .cross-bg {
+      position: absolute; pointer-events: none;
+      opacity: 0.04; font-size: 6rem; color: #fff;
+      font-weight: 900;
+    }
+    .cb1 { top: 10%; left: 5%; font-size: 8rem; animation: floatSlow 10s ease-in-out infinite; }
+    .cb2 { bottom: 20%; right: 8%; font-size: 5rem; animation: floatSlow 12s ease-in-out infinite 3s; }
+    .cb3 { top: 50%; left: 45%; font-size: 4rem; animation: floatSlow 9s ease-in-out infinite 1s; }
+
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 6px 16px; border-radius: 50px;
+      font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.5px; margin-bottom: 20px;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-badge .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #fff; animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800; color: #fff;
+      line-height: 1.1; margin-bottom: 20px;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+    .hero-title em {
+      font-style: normal;
+      position: relative;
+    }
+    .hero-title em::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 3px; border-radius: 3px;
+      background: rgba(255,255,255,0.5);
+    }
+
+    .hero-desc {
+      color: rgba(255,255,255,0.88);
+      font-size: 1.05rem; line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 480px;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .hero-cta {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .btn-primary-hero {
+      background: #fff;
+      color: var(--teal-dark);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1rem;
+      padding: 14px 32px; border-radius: 50px;
+      border: none; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+    .btn-primary-hero:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+      color: var(--teal-dark);
+    }
+
+    .btn-secondary-hero {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      padding: 14px 32px; border-radius: 50px;
+      border: 2px solid rgba(255,255,255,0.5);
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.3s;
+    }
+    .btn-secondary-hero:hover {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.8);
+      transform: translateY(-3px);
+      color: #fff;
+    }
+
+    /* Stats row */
+    .hero-stats {
+      display: flex; gap: 28px;
+      margin-top: 44px;
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+    .stat {
+      text-align: left;
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem; font-weight: 800;
+      color: #fff; line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.78rem; color: rgba(255,255,255,0.75);
+      font-weight: 600; letter-spacing: 0.3px;
+      margin-top: 4px;
+    }
+    .stat-divider {
+      width: 1px; background: rgba(255,255,255,0.25);
+      align-self: stretch;
+    }
+
+    /* Hero visual side */
+    .hero-visual {
+      position: relative; z-index: 2;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .hero-card-main {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 28px;
+      padding: 36px 32px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-img-wrap {
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: 3px solid rgba(255,255,255,0.3);
+      margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; color: rgba(255,255,255,0.8);
+      overflow: hidden;
+    }
+    .hero-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+
+    .hero-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; font-weight: 700;
+      color: #fff; margin-bottom: 6px;
+    }
+    .hero-card-sub { color: rgba(255,255,255,0.75); font-size: 0.88rem; margin-bottom: 20px; }
+
+    /* Floating info chips */
+    .chip {
+      position: absolute;
+      background: #fff;
+      border-radius: 14px;
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 8px 24px rgba(74,157,150,0.25);
+      font-size: 0.82rem; font-weight: 700;
+      color: var(--warm-dark);
+      white-space: nowrap;
+    }
+    .chip-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--grad); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.85rem; flex-shrink: 0; }
+    .chip1 { top: -18px; left: -30px; animation: chipFloat1 4s ease-in-out infinite; }
+    .chip2 { bottom: 30px; right: -30px; animation: chipFloat2 5s ease-in-out infinite 1s; }
+    .chip3 { bottom: -18px; left: 20px; animation: chipFloat1 4.5s ease-in-out infinite 0.5s; }
+
+    @keyframes chipFloat1 {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes chipFloat2 {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* Specialty pills scroll */
+    .specialty-scroll {
+      display: flex; gap: 8px;
+      flex-wrap: wrap; justify-content: center;
+      margin-top: 16px;
+    }
+    .spc-pill {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.9);
+      padding: 5px 13px; border-radius: 50px;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute; bottom: 30px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.6); font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      animation: fadeUp 1s ease 0.8s both;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .scroll-arrow {
+      width: 36px; height: 36px; border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* ══════════════════════════════
+       TRUST BAR
+    ══════════════════════════════ */
+    .trust-bar {
+      background: var(--white);
+      padding: 28px 5%;
+      border-bottom: 1px solid rgba(125,211,201,0.2);
+    }
+    .trust-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-around;
+      gap: 20px; flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.88rem; font-weight: 700; color: var(--teal-dark);
+    }
+    .trust-item i { font-size: 1.2rem; color: var(--teal-mid); }
+
+    /* ══════════════════════════════
+       WHY MEDLINK
+    ══════════════════════════════ */
+    .section {
+      padding: 90px 5%;
+    }
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(125,211,201,0.15);
+      color: var(--teal-dark);
+      padding: 6px 16px; border-radius: 50px;
+      font-size: 0.78rem; font-weight: 800;
+      letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800; color: var(--warm-dark);
+      line-height: 1.2; margin-bottom: 14px;
+    }
+    .section-title span { color: var(--teal-dark); }
+    .section-sub {
+      color: #78818c; font-size: 1rem; line-height: 1.7;
+      max-width: 520px;
+    }
+
+    .why-grid {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+    }
+    .why-cards {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .why-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 24px 20px;
+      border: 1.5px solid rgba(125,211,201,0.2);
+      transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .why-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--grad); opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .why-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(74,157,150,0.15); border-color: var(--teal-light); }
+    .why-card:hover::before { opacity: 1; }
+
+    .why-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: rgba(125,211,201,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: var(--teal-dark);
+      margin-bottom: 14px;
+      transition: all 0.3s;
+    }
+    .why-card:hover .why-icon { background: var(--grad); color: #fff; }
+    .why-card h4 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 0.95rem;
+      color: var(--warm-dark); margin-bottom: 6px;
+    }
+    .why-card p { font-size: 0.82rem; color: #78818c; line-height: 1.6; }
+
+    /* Accent card */
+    .why-card.accent {
+      background: var(--grad); border-color: transparent;
+    }
+    .why-card.accent .why-icon { background: rgba(255,255,255,0.2); color: #fff; }
+    .why-card.accent h4 { color: #fff; }
+    .why-card.accent p  { color: rgba(255,255,255,0.8); }
+    .why-card.accent:hover .why-icon { background: rgba(255,255,255,0.3); }
+
+    /* ══════════════════════════════
+       SPECIALTIES
+    ══════════════════════════════ */
+    .specs-section {
+      background: linear-gradient(180deg, var(--cream) 0%, rgba(125,211,201,0.07) 100%);
+      padding: 90px 5%;
+    }
+    .specs-inner { max-width: 1100px; margin: 0 auto; }
+    .specs-header { text-align: center; margin-bottom: 50px; }
+    .specs-header .section-sub { margin: 0 auto; }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .spec-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 28px 22px;
+      border: 1.5px solid rgba(125,211,201,0.2);
+      transition: all 0.3s;
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    .spec-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(74,157,150,0.13); border-color: var(--teal-light); }
+    .spec-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 800;
+      color: rgba(125,211,201,0.3);
+      line-height: 1; flex-shrink: 0; min-width: 36px;
+    }
+    .spec-body h4 {
+      font-weight: 800; font-size: 0.95rem;
+      color: var(--warm-dark); margin-bottom: 5px;
+    }
+    .spec-body p { font-size: 0.8rem; color: #78818c; line-height: 1.6; }
+    .spec-icon-row { margin-top: 10px; }
+    .spec-icon-row i { color: var(--teal-mid); font-size: 1.1rem; }
+
+    /* ══════════════════════════════
+       HOW IT WORKS
+    ══════════════════════════════ */
+    .how-section { padding: 90px 5%; background: var(--white); }
+    .how-inner { max-width: 1100px; margin: 0 auto; }
+    .how-steps {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; margin-top: 50px;
+      position: relative;
+    }
+    .how-steps::before {
+      content: ''; position: absolute;
+      top: 42px; left: 12%; right: 12%; height: 2px;
+      background: linear-gradient(90deg, var(--teal-light), var(--teal-dark));
+      z-index: 0;
+    }
+    .how-step {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; position: relative; z-index: 1; padding: 0 16px;
+    }
+    .step-circle {
+      width: 84px; height: 84px; border-radius: 50%;
+      background: var(--white); border: 3px solid var(--teal-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; color: var(--teal-dark);
+      margin-bottom: 18px;
+      box-shadow: 0 8px 24px rgba(125,211,201,0.2);
+      transition: all 0.3s;
+      position: relative;
+    }
+    .step-circle:hover { background: var(--grad); color: #fff; border-color: transparent; transform: scale(1.08); }
+    .step-num-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--grad); color: #fff;
+      font-size: 0.7rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .how-step h4 { font-weight: 800; font-size: 0.95rem; color: var(--warm-dark); margin-bottom: 6px; }
+    .how-step p  { font-size: 0.82rem; color: #78818c; line-height: 1.6; }
+
+    /* ══════════════════════════════
+       TESTIMONIALS
+    ══════════════════════════════ */
+    .testi-section {
+      padding: 90px 5%;
+      background: linear-gradient(135deg, rgba(125,211,201,0.06) 0%, rgba(74,157,150,0.04) 100%);
+    }
+    .testi-inner { max-width: 1100px; margin: 0 auto; }
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px; margin-top: 50px;
+    }
+    .testi-card {
+      background: var(--white);
+      border-radius: 20px; padding: 28px 24px;
+      border: 1.5px solid rgba(125,211,201,0.15);
+      transition: all 0.3s;
+      position: relative;
+    }
+    .testi-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(74,157,150,0.12); }
+    .testi-quote {
+      font-size: 2.5rem; color: var(--teal-light);
+      font-family: 'Playfair Display', serif;
+      line-height: 0.8; margin-bottom: 12px;
+    }
+    .testi-text {
+      font-size: 0.9rem; color: #5a6470; line-height: 1.7;
+      margin-bottom: 20px; font-style: italic;
+    }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--grad);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 800; font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .testi-name { font-weight: 800; font-size: 0.88rem; color: var(--warm-dark); }
+    .testi-role { font-size: 0.76rem; color: #94a3b8; }
+    .stars { color: #fbbf24; font-size: 0.8rem; margin-bottom: 10px; }
+
+    /* ══════════════════════════════
+       CTA SECTION
+    ══════════════════════════════ */
+    .cta-section {
+      padding: 100px 5%;
+      background: var(--grad);
+      position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    .cta-section::after {
+      content: '';
+      position: absolute; width: 500px; height: 500px;
+      border-radius: 50%; background: rgba(255,255,255,0.06);
+      bottom: -200px; right: -100px; pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+    .cta-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.2);
+      color: #fff; padding: 6px 18px;
+      border-radius: 50px; font-size: 0.8rem;
+      font-weight: 800; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .cta-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; color: #fff;
+      line-height: 1.15; margin-bottom: 16px;
+    }
+    .cta-desc { color: rgba(255,255,255,0.85); font-size: 1rem; line-height: 1.7; margin-bottom: 36px; }
+    .cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    .btn-cta-white {
+      background: #fff; color: var(--teal-dark);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1rem;
+      padding: 15px 36px; border-radius: 50px;
+      border: none; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+    }
+    .btn-cta-white:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.2); color: var(--teal-dark); }
+
+    .btn-cta-outline {
+      background: transparent; color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      padding: 15px 36px; border-radius: 50px;
+      border: 2px solid rgba(255,255,255,0.6);
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.3s;
+    }
+    .btn-cta-outline:hover { background: rgba(255,255,255,0.15); border-color: #fff; transform: translateY(-3px); color: #fff; }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    footer {
+      background: #1e2d2c;
+      padding: 60px 5% 30px;
+      color: rgba(255,255,255,0.7);
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-brand-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700; font-size: 1.3rem;
+      color: #fff; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .footer-brand-desc { font-size: 0.85rem; line-height: 1.7; margin-bottom: 20px; }
+    .footer-socials { display: flex; gap: 10px; }
+    .fsocial {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.6); font-size: 0.85rem;
+      text-decoration: none; transition: all 0.3s;
+    }
+    .fsocial:hover { background: var(--teal-dark); border-color: var(--teal-dark); color: #fff; }
+
+    .footer-col h5 {
+      font-weight: 800; font-size: 0.85rem;
+      color: #fff; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a {
+      color: rgba(255,255,255,0.55); font-size: 0.85rem;
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--teal-light); }
+
+    .footer-bottom {
+      max-width: 1100px; margin: 24px auto 0;
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 10px;
+      font-size: 0.8rem;
+    }
+    .footer-bottom a { color: rgba(255,255,255,0.4); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--teal-light); }
+
+    /* ══════════════════════════════
+       MOBILE DRAWER
+    ══════════════════════════════ */
+    .mobile-drawer {
+      position: fixed; top: 0; right: -100%;
+      width: min(80vw, 300px); height: 100vh;
+      background: #fff; z-index: 200;
+      padding: 30px 24px;
+      box-shadow: -8px 0 40px rgba(0,0,0,0.12);
+      transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .mobile-drawer.open { right: 0; }
+    .drawer-close {
+      align-self: flex-end; background: none; border: none;
+      font-size: 1.4rem; cursor: pointer; color: var(--warm-dark);
+      margin-bottom: 16px;
+    }
+    .mobile-drawer a {
+      font-weight: 700; color: var(--warm-dark);
+      text-decoration: none; padding: 12px 16px;
+      border-radius: 12px; font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .mobile-drawer a:hover { background: rgba(125,211,201,0.12); color: var(--teal-dark); }
+    .drawer-divider { height: 1px; background: rgba(125,211,201,0.2); margin: 8px 0; }
+    .drawer-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.3); z-index: 199;
+    }
+    .drawer-overlay.open { display: block; }
+
+    /* ══════════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════════ */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 900px) {
+      .hero-content { grid-template-columns: 1fr; gap: 40px; }
+      .hero-visual { display: none; }
+      .why-grid { grid-template-columns: 1fr; }
+      .specs-grid { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr 1fr; gap: 30px; }
+      .how-steps::before { display: none; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+    }
+    @media (max-width: 576px) {
+      .hero { padding: 100px 5% 70px; }
+      .specs-grid { grid-template-columns: 1fr; }
+      .why-cards { grid-template-columns: 1fr; }
+      .hero-stats { gap: 16px; flex-wrap: wrap; }
+      .how-steps { grid-template-columns: 1fr; gap: 24px; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .trust-inner { flex-direction: column; align-items: flex-start; gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="nav" id="mainNav">
+    <a href="landing.html" class="nav-brand">
+      <img src="MedLinkLogo.png" alt="MedLink" class="nav-logo" onerror="this.style.display='none'">
+      MedLink Clinic
+    </a>
+    <div class="nav-links" id="navLinksDesktop">
+      <a href="#why">Why Us</a>
+      <a href="#specialties">Specialties</a>
+      <a href="#how">How It Works</a>
+      <!-- Guest state -->
+      <span id="landingNavGuest" style="display:flex;gap:6px;align-items:center;">
+        <a href="patient-login.html" class="btn-nav-login">Sign In</a>
+        <a href="register.html" class="btn-nav-register">Create Account</a>
+      </span>
+      <!-- Logged-in state -->
+      <span id="landingNavUser" style="display:none;align-items:center;gap:8px;">
+        <span style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.18);border-radius:50px;padding:7px 16px;font-weight:700;font-size:0.88rem;color:#fff;">
+          <span id="landingNavAvatar" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;border:1.5px solid rgba(255,255,255,0.5);flex-shrink:0;"></span>
+          <span id="landingNavName"></span>
+        </span>
+        <a href="index.html" class="btn-nav-register">Go to Clinic</a>
+        <a href="#" onclick="landingLogout()" style="font-size:0.82rem;color:rgba(255,255,255,0.75);font-weight:700;padding:7px 12px;border-radius:50px;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='transparent'">Sign Out</a>
+      </span>
+    </div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="mobile-drawer" id="mobileDrawer">
+    <button class="drawer-close" onclick="closeDrawer()"><i class="fas fa-times"></i></button>
+    <a href="#why" onclick="closeDrawer()">Why MedLink?</a>
+    <a href="#specialties" onclick="closeDrawer()">Specialties</a>
+    <a href="#how" onclick="closeDrawer()">How It Works</a>
+    <div class="drawer-divider"></div>
+    <span id="drawerGuest">
+      <a href="patient-login.html" style="color:var(--teal-dark);font-weight:800;">Sign In</a>
+      <a href="register.html" style="background:var(--grad);color:#fff;border-radius:12px;text-align:center;margin-top:4px;">Create Account →</a>
+    </span>
+    <span id="drawerUser" style="display:none;flex-direction:column;gap:8px;">
+      <div id="drawerUserName" style="font-weight:800;font-size:0.95rem;color:var(--teal-dark);padding:8px 16px;background:rgba(125,211,201,0.1);border-radius:10px;"></div>
+      <a href="index.html" style="background:var(--grad);color:#fff;border-radius:12px;text-align:center;">Go to Clinic →</a>
+      <a href="#" onclick="landingLogout()" style="color:#ef4444;font-weight:700;text-align:center;">Sign Out</a>
+    </span>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-circle hc1"></div>
+    <div class="hero-circle hc2"></div>
+    <div class="hero-circle hc3"></div>
+    <div class="hero-circle hc4"></div>
+    <div class="cross-bg cb1">✚</div>
+    <div class="cross-bg cb2">✚</div>
+    <div class="cross-bg cb3">✚</div>
+
+    <div class="hero-content">
+      <!-- Left -->
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Now Open 24 / 7 in Marikina
+        </div>
+        <h1 class="hero-title">
+          Your Health,<br><em>Our Priority</em>
+        </h1>
+        <p class="hero-desc">
+          MedLink Clinic brings expert medical care right to your fingertips. Book appointments online, get seen by top specialists, and take control of your health journey — anytime.
+        </p>
+        <div class="hero-cta">
+          <a href="register.html" class="btn-primary-hero">
+            <i class="fas fa-user-plus"></i> Create Free Account
+          </a>
+          <a href="patient-login.html" class="btn-secondary-hero">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num">9+</div>
+            <div class="stat-label">Specialties</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <div class="stat-num">24/7</div>
+            <div class="stat-label">Open Daily</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Online Booking</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <div class="stat-num">★ 4.9</div>
+            <div class="stat-label">Patient Rating</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: visual card -->
+      <div class="hero-visual">
+        <div class="hero-card-main">
+          <div class="hero-img-wrap">
+            <img src="doctorillustration.png" alt="MedLink Doctor" onerror="this.parentElement.innerHTML='<i class=\'fas fa-user-md\'></i>'">
+          </div>
+          <div class="hero-card-title">Quality Care, Expert Hands</div>
+          <div class="hero-card-sub">Trusted by families in Marikina</div>
+          <div class="specialty-scroll">
+            <span class="spc-pill">General Medicine</span>
+            <span class="spc-pill">Pediatrics</span>
+            <span class="spc-pill">OB-GYN</span>
+            <span class="spc-pill">Orthopedics</span>
+            <span class="spc-pill">ENT</span>
+            <span class="spc-pill">+ More</span>
+          </div>
+        </div>
+
+        <!-- Floating chips -->
+        <div class="chip chip1">
+          <div class="chip-icon"><i class="fas fa-calendar-check"></i></div>
+          <div>
+            <div style="font-size:0.7rem;color:#94a3b8;font-weight:600;">Next Available</div>
+            <div>Book in minutes</div>
+          </div>
+        </div>
+        <div class="chip chip2">
+          <div class="chip-icon"><i class="fas fa-shield-alt"></i></div>
+          <div>
+            <div style="font-size:0.7rem;color:#94a3b8;font-weight:600;">Your Data</div>
+            <div>Secure & Private</div>
+          </div>
+        </div>
+        <div class="chip chip3">
+          <div class="chip-icon"><i class="fas fa-star" style="color:#fbbf24"></i></div>
+          <div>
+            <div style="font-size:0.7rem;color:#94a3b8;font-weight:600;">Patient Rating</div>
+            <div>4.9 / 5.0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint" onclick="document.getElementById('why').scrollIntoView({behavior:'smooth'})">
+      Scroll
+      <div class="scroll-arrow"><i class="fas fa-chevron-down" style="font-size:0.7rem;color:rgba(255,255,255,0.7)"></i></div>
+    </div>
+  </section>
+
+  <!-- ── TRUST BAR ── -->
+  <div class="trust-bar">
+    <div class="trust-inner">
+      <div class="trust-item"><i class="fas fa-user-md"></i> Expert Doctors</div>
+      <div class="trust-item"><i class="fas fa-clock"></i> 24/7 Availability</div>
+      <div class="trust-item"><i class="fas fa-map-marker-alt"></i> Based in Marikina</div>
+      <div class="trust-item"><i class="fas fa-shield-alt"></i> Secure Records</div>
+      <div class="trust-item"><i class="fas fa-mobile-alt"></i> Online Booking</div>
+      <div class="trust-item"><i class="fas fa-heart"></i> Family-Centered Care</div>
+    </div>
+  </div>
+
+  <!-- ── WHY MEDLINK ── -->
+  <section class="section" id="why">
+    <div class="why-grid">
+      <div class="reveal">
+        <div class="section-tag"><i class="fas fa-star"></i> Why Choose Us</div>
+        <h2 class="section-title">Healthcare That <span>Puts You First</span></h2>
+        <p class="section-sub">We combine experienced medical professionals, modern facilities, and a seamless digital experience to give you and your family the best care possible.</p>
+        <div style="margin-top:28px;">
+          <a href="register.html" class="btn-primary-hero" style="background:var(--grad);color:#fff;box-shadow:0 8px 28px rgba(74,157,150,0.3);">
+            </i> Proceed
+          </a>
+        </div>
+      </div>
+      <div class="why-cards reveal reveal-delay-2">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-calendar-alt"></i></div>
+          <h4>Easy Online Booking</h4>
+          <p>Book appointments with your preferred doctor in just a few clicks, anytime of day.</p>
+        </div>
+        <div class="why-card accent">
+          <div class="why-icon"><i class="fas fa-user-md"></i></div>
+          <h4>Specialist Doctors</h4>
+          <p>Our team includes experienced specialists across 9+ medical fields ready to serve you.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-clock"></i></div>
+          <h4>Open 24 / 7</h4>
+          <p>We never close. Get the care you need any hour of any day, including holidays.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Secure & Private</h4>
+          <p>Your health records and personal data are protected with modern security standards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SPECIALTIES ── -->
+  <section class="specs-section" id="specialties">
+    <div class="specs-inner">
+      <div class="specs-header reveal">
+        <div class="section-tag"><i class="fas fa-stethoscope"></i> Medical Specialties</div>
+        <h2 class="section-title">Comprehensive Care, <span>All Under One Roof</span></h2>
+        <p class="section-sub">From routine checkups to specialized treatment, our team of doctors covers the full spectrum of your family's healthcare needs.</p>
+      </div>
+      <div class="specs-grid">
+        <div class="spec-card reveal reveal-delay-1">
+          <div class="spec-num">01</div>
+          <div class="spec-body">
+            <h4>General Medicine</h4>
+            <p>Comprehensive care for common illnesses, chronic disease management, and routine health checks.</p>
+            <div class="spec-icon-row"><i class="fas fa-user-md"></i></div>
+          </div>
+        </div>
+        <div class="spec-card reveal reveal-delay-2">
+          <div class="spec-num">02</div>
+          <div class="spec-body">
+            <h4>Family Medicine</h4>
+            <p>Holistic, relationship-based care for every member of your family across all life stages.</p>
+            <div class="spec-icon-row"><i class="fas fa-users"></i></div>
+          </div>
+        </div>
+        <div class="spec-card reveal reveal-delay-3">
+          <div class="spec-num">03</div>
+          <div class="spec-body">
+            <h4>Pediatrics</h4>
+            <p>Dedicated child health services from newborn care to adolescent wellness.</p>
+            <div class="spec-icon-row"><i class="fas fa-baby"></i></div>
+          </div>
+        </div>
+        <div class="spec-card reveal reveal-delay-1">
+          <div class="spec-num">04</div>
+          <div class="spec-body">
+            <h4>Internal Medicine</h4>
+            <p>Expert diagnosis and treatment of complex adult diseases and organ systems.</p>
+            <div class="spec-icon-row"><i class="fas fa-stethoscope"></i></div>
+          </div>
+        </div>
+        <div class="spec-card reveal reveal-delay-2">
+          <div class="spec-num">05</div>
+          <div class="spec-body">
+            <h4>Ophthalmology</h4>
+            <p>Eye exams, vision correction, and treatment of eye conditions for all ages.</p>
+            <div class="spec-icon-row"><i class="fas fa-eye"></i></div>
+          </div>
+        </div>
+        <div class="spec-card reveal reveal-delay-3">
+          <div class="spec-num">06</div>
+          <div class="spec-body">
+            <h4>Orthopedics</h4>
+            <p>Bone, joint, and muscle care — from sports injuries to arthritis management.</p>
+            <div class="spec-icon-row"><i class="fas fa-bone"></i></div>
+          </div>
+        </div>
+        <div class="spec-card reveal reveal-delay-1">
+          <div class="spec-num">07</div>
+          <div class="spec-body">
+            <h4>OB-Gynecology</h4>
+            <p>Women's health, prenatal care, fertility consultations, and gynecologic services.</p>
+            <div class="spec-icon-row"><i class="fas fa-female"></i></div>
+          </div>
+        </div>
+        <div class="spec-card reveal reveal-delay-2">
+          <div class="spec-num">08</div>
+          <div class="spec-body">
+            <h4>ENT</h4>
+            <p>Ear, nose and throat treatments including allergies, hearing loss, and sinus care.</p>
+            <div class="spec-icon-row"><i class="fas fa-head-side-cough"></i></div>
+          </div>
+        </div>
+        <div class="spec-card reveal reveal-delay-3">
+          <div class="spec-num">09</div>
+          <div class="spec-body">
+            <h4>Pathology</h4>
+            <p>Accurate lab diagnostics to support precise diagnosis and treatment planning.</p>
+            <div class="spec-icon-row"><i class="fas fa-microscope"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="how-section" id="how">
+    <div class="how-inner">
+      <div class="specs-header reveal" style="text-align:center;margin-bottom:0;">
+        <div class="section-tag"><i class="fas fa-magic"></i> How It Works</div>
+        <h2 class="section-title">Get Care in <span>4 Simple Steps</span></h2>
+        <p class="section-sub" style="margin:0 auto;">From signup to seeing a doctor — MedLink makes healthcare simple, fast, and stress-free.</p>
+      </div>
+      <div class="how-steps">
+        <div class="how-step reveal reveal-delay-1">
+          <div class="step-circle">
+            <i class="fas fa-user-plus"></i>
+            <div class="step-num-badge">1</div>
+          </div>
+          <h4>Create an Account</h4>
+          <p>Sign up for free in under 2 minutes. We only need the basics to get you started.</p>
+        </div>
+        <div class="how-step reveal reveal-delay-2">
+          <div class="step-circle">
+            <i class="fas fa-search"></i>
+            <div class="step-num-badge">2</div>
+          </div>
+          <h4>Choose a Specialty</h4>
+          <p>Browse our 9 specialties and pick the doctor and time slot that works for you.</p>
+        </div>
+        <div class="how-step reveal reveal-delay-3">
+          <div class="step-circle">
+            <i class="fas fa-calendar-check"></i>
+            <div class="step-num-badge">3</div>
+          </div>
+          <h4>Book Your Slot</h4>
+          <p>Confirm your appointment instantly. You'll receive a confirmation right away.</p>
+        </div>
+        <div class="how-step reveal reveal-delay-4">
+          <div class="step-circle">
+            <i class="fas fa-heartbeat"></i>
+            <div class="step-num-badge">4</div>
+          </div>
+          <h4>Get Quality Care</h4>
+          <p>Visit the clinic and experience warm, expert medical attention tailored to you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section class="testi-section">
+    <div class="testi-inner">
+      <div class="specs-header reveal" style="text-align:center;margin-bottom:0;">
+        <div class="section-tag"><i class="fas fa-heart"></i> Patient Stories</div>
+        <h2 class="section-title">Trusted by <span>Marikina Families</span></h2>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card reveal reveal-delay-1">
+          <div class="stars">★★★★★</div>
+          <div class="testi-quote">"</div>
+          <p class="testi-text">Booking was so easy — I found a slot for my daughter's checkup in less than 5 minutes. The doctor was thorough and kind. We'll definitely be back!</p>
+          <div class="testi-author">
+            <div class="testi-avatar">MA</div>
+            <div>
+              <div class="testi-name">Maria A.</div>
+              <div class="testi-role">Mother of 2, Marikina</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card reveal reveal-delay-2">
+          <div class="stars">★★★★★</div>
+          <div class="testi-quote">"</div>
+          <p class="testi-text">As someone who works odd hours, the 24/7 availability is a game-changer. I booked my appointment at midnight and got confirmed immediately. Incredible service.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">RC</div>
+            <div>
+              <div class="testi-name">Ramon C.</div>
+              <div class="testi-role">Night shift worker, Marikina</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card reveal reveal-delay-3">
+          <div class="stars">★★★★★</div>
+          <div class="testi-quote">"</div>
+          <p class="testi-text">The online system is clean and simple. My whole family uses MedLink now — from my toddler's pedia appointments to my husband's orthopedics consult. Highly recommended.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">JL</div>
+            <div>
+              <div class="testi-name">Jasmine L.</div>
+              <div class="testi-role">Patient since 2023, Marikina</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <div class="cta-tag"><i class="fas fa-heartbeat"></i> Start Your Health Journey</div>
+      <h2 class="cta-title">Your Health Deserves the Best Care</h2>
+      <p class="cta-desc">Join thousands of Marikina families who trust MedLink Clinic for their healthcare needs. Create your free account and book your first appointment today.</p>
+      <div class="cta-buttons">
+        <a href="register.html" class="btn-cta-white">
+          <i class="fas fa-user-plus"></i> Create Free Account
+        </a>
+        <a href="patient-login.html" class="btn-cta-outline">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">
+          <img src="MedLinkLogo.png" alt="MedLink" style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.2)" onerror="this.style.display='none'">
+          MedLink Clinic
+        </div>
+        <p class="footer-brand-desc">Providing quality, accessible healthcare to the Marikina community — 24 hours a day, 7 days a week.</p>
+        <div class="footer-socials">
+          <a href="https://facebook.com/karl.go.73" class="fsocial" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/karlll_go/" class="fsocial" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+          <a href="https://x.com/xPulds" class="fsocial"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="register.html">Create Account</a></li>
+          <li><a href="patient-login.html">Sign In</a></li>
+          <li><a href="index.html">Book Appointment</a></li>
+          <li><a href="#specialties">Specialties</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="#">General Medicine</a></li>
+          <li><a href="#">Pediatrics</a></li>
+          <li><a href="#">OB-Gynecology</a></li>
+          <li><a href="#">Orthopedics</a></li>
+          <li><a href="#">View All →</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="#">📍 123 Healthcare St., Marikina</a></li>
+          <li><a href="tel:+639055177314">📞 +63 905 517 7314</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#c3aaada5ac83aea6a7afaaada8a0afaaadaaa0eda0acae">✉️ <span class="__cf_email__" data-cfemail="2c45424a436c414948404542474f404542454f024f4341">[email&#160;protected]</span></a></li>
+          <li><a href="#">🕐 Open 24/7</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 MedLink Clinic. All rights reserved.</span>
+      <span>
+        <a href="#">Privacy Policy</a> &nbsp;|&nbsp;
+        <a href="#">Terms of Service</a>
+      </span>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ── Navbar scroll effect ──
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── Mobile drawer ──
+    document.getElementById('hamburgerBtn').addEventListener('click', () => {
+      document.getElementById('mobileDrawer').classList.add('open');
+      document.getElementById('drawerOverlay').classList.add('open');
+    });
+    function closeDrawer() {
+      document.getElementById('mobileDrawer').classList.remove('open');
+      document.getElementById('drawerOverlay').classList.remove('open');
+    }
+
+    // ── Scroll reveal ──
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ── Animated counter ──
+    function animateCount(el, target, suffix = '') {
+      let current = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) { el.textContent = target + suffix; clearInterval(timer); return; }
+        el.textContent = Math.floor(current) + suffix;
+      }, 16);
+    }
+
+    // ── Patient session awareness ──
+    (function() {
+      const raw = sessionStorage.getItem('medlink_user');
+
+      // If already logged in — send straight to the main site
+      if (raw) {
+        try {
+          const user = JSON.parse(raw);
+          // Show logged-in nav state before redirect so there's no flash
+          const firstName = user.firstName || (user.fullName || '').split(' ')[0] || 'Patient';
+          const initials  = ((user.firstName || '?')[0] + (user.lastName || '?')[0]).toUpperCase();
+
+          document.getElementById('landingNavGuest').style.display = 'none';
+          const userEl = document.getElementById('landingNavUser');
+          userEl.style.display = 'flex';
+          document.getElementById('landingNavAvatar').textContent = initials;
+          document.getElementById('landingNavName').textContent   = 'Hi, ' + firstName;
+
+          document.getElementById('drawerGuest').style.display = 'none';
+          const drawerUser = document.getElementById('drawerUser');
+          drawerUser.style.display = 'flex';
+          document.getElementById('drawerUserName').textContent = '👋 Hi, ' + firstName + '!';
+
+          // Redirect immediately
+          window.location.replace('index.html');
+        } catch(e) {
+          // Corrupt session — clear and stay on landing
+          sessionStorage.removeItem('medlink_user');
+          sessionStorage.removeItem('medlink_welcomed');
+        }
+        return;
+      }
+    })();
+
+    function landingLogout() {
+      sessionStorage.removeItem('medlink_user');
+      sessionStorage.removeItem('medlink_welcomed');
+      window.location.replace('landing.html');
+    }
+  </script>
+</body>
+</html>

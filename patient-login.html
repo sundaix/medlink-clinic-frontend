@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In – MedLink Clinic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --teal-light:  #7dd3c9;
+      --teal-mid:    #5bc0b5;
+      --teal-dark:   #4a9d96;
+      --warm-dark:   #50372c;
+      --cream:       #f5fffe;
+      --grad: linear-gradient(135deg, #7dd3c9 0%, #5bc0b5 50%, #4a9d96 100%);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* ── Background ── */
+    .bg-wrap {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .bg-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--grad);
+      clip-path: polygon(0 0, 100% 0, 100% 58%, 0 78%);
+    }
+    .bg-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+      clip-path: polygon(0 0, 100% 0, 100% 58%, 0 78%);
+    }
+    .blob {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+      pointer-events: none;
+    }
+    .blob1 { width: 400px; height: 400px; top: -120px; right: -80px; animation: blobDrift 14s ease-in-out infinite alternate; }
+    .blob2 { width: 260px; height: 260px; top: 30%; left: -60px; animation: blobDrift 10s ease-in-out infinite alternate-reverse; }
+    .blob3 { width: 160px; height: 160px; top: 10%; left: 35%; animation: blobDrift 8s ease-in-out infinite alternate; }
+    @keyframes blobDrift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.07); }
+    }
+
+    /* ── Navbar ── */
+    .nav {
+      position: relative; z-index: 10;
+      padding: 18px 5%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700; font-size: 1.25rem;
+      color: #fff; text-decoration: none;
+    }
+    .nav-logo {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.4); object-fit: cover;
+      background: rgba(255,255,255,0.1);
+    }
+    .nav-back {
+      color: rgba(255,255,255,0.85); font-size: 0.88rem;
+      font-weight: 700; text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 50px;
+      border: 1.5px solid rgba(255,255,255,0.35);
+      transition: all 0.25s;
+    }
+    .nav-back:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+    /* ── Main layout ── */
+    .page-body {
+      position: relative; z-index: 1;
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 30px 20px 60px;
+    }
+
+    .login-wrap {
+      width: 100%; max-width: 460px;
+    }
+
+    .login-hero {
+      text-align: center; margin-bottom: 28px;
+      animation: fadeUp 0.7s ease both;
+    }
+    .login-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 800;
+      color: #fff; line-height: 1.15; margin-bottom: 8px;
+    }
+    .login-hero p { color: rgba(255,255,255,0.8); font-size: 0.95rem; }
+
+    .login-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 24px 64px rgba(74,157,150,0.18), 0 4px 16px rgba(0,0,0,0.06);
+      overflow: hidden;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+
+    .tab-bar {
+      display: grid; grid-template-columns: 1fr 1fr;
+      background: rgba(125,211,201,0.08);
+      border-bottom: 1.5px solid rgba(125,211,201,0.18);
+    }
+    .tab-btn {
+      padding: 16px; background: none; border: none;
+      cursor: pointer; font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 0.9rem;
+      color: #94a3b8; display: flex; align-items: center;
+      justify-content: center; gap: 7px;
+      transition: all 0.25s; border-bottom: 3px solid transparent;
+      margin-bottom: -1.5px;
+    }
+    .tab-btn.active {
+      color: var(--teal-dark);
+      border-bottom-color: var(--teal-dark);
+      background: #fff;
+    }
+    .tab-btn:hover:not(.active) { color: var(--teal-mid); background: rgba(125,211,201,0.06); }
+
+    .card-body {
+      padding: 32px 36px 36px;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .field {
+      position: relative; margin-bottom: 20px;
+    }
+    .field input {
+      width: 100%;
+      border: 2px solid rgba(125,211,201,0.35);
+      border-radius: 12px;
+      padding: 20px 44px 8px 16px;
+      font-size: 0.95rem; font-family: 'Nunito', sans-serif;
+      color: var(--warm-dark); background: #fdffff;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      outline: none;
+    }
+    .field input:focus {
+      border-color: var(--teal-mid);
+      box-shadow: 0 0 0 3px rgba(125,211,201,0.2);
+    }
+    .field label {
+      position: absolute; left: 16px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.88rem; color: #94a3b8;
+      pointer-events: none; transition: all 0.2s;
+      font-weight: 600; font-family: 'Nunito', sans-serif;
+    }
+    .field input:focus ~ label,
+    .field input:not(:placeholder-shown) ~ label {
+      top: 11px; transform: none;
+      font-size: 0.7rem; color: var(--teal-dark);
+      font-weight: 800; letter-spacing: 0.4px;
+    }
+    .field .fi {
+      position: absolute; right: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: rgba(125,211,201,0.7); font-size: 0.9rem;
+      pointer-events: none; transition: color 0.2s;
+    }
+    .field input:focus ~ .fi { color: var(--teal-dark); }
+    .field .toggle-eye {
+      position: absolute; right: 14px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: rgba(125,211,201,0.8); font-size: 0.9rem;
+      padding: 4px; transition: color 0.2s;
+    }
+    .field .toggle-eye:hover { color: var(--teal-dark); }
+
+    .field input.err { border-color: #ef4444 !important; box-shadow: 0 0 0 3px rgba(239,68,68,0.1) !important; }
+    .field input.ok  { border-color: var(--teal-mid) !important; }
+    .field-err { font-size: 0.76rem; color: #ef4444; font-weight: 700; margin-top: 5px; padding-left: 4px; display: none; }
+    .field-err.show { display: block; }
+
+    .forgot-row {
+      display: flex; justify-content: flex-end;
+      margin-top: -10px; margin-bottom: 22px;
+    }
+    .forgot-link {
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--teal-dark); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .forgot-link:hover { color: var(--teal-mid); text-decoration: underline; }
+
+    .alert-box {
+      border-radius: 12px; padding: 13px 16px;
+      font-size: 0.85rem; font-weight: 700;
+      display: none; margin-bottom: 18px;
+      display: flex; align-items: flex-start; gap: 10px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .alert-box.show { display: flex; opacity: 1; }
+    .alert-box.error {
+      background: rgba(239,68,68,0.08);
+      border: 1.5px solid rgba(239,68,68,0.25);
+      color: #b91c1c;
+    }
+    .alert-box.success {
+      background: rgba(74,157,150,0.1);
+      border: 1.5px solid rgba(74,157,150,0.3);
+      color: var(--teal-dark);
+    }
+    .alert-box.info {
+      background: rgba(125,211,201,0.1);
+      border: 1.5px solid rgba(125,211,201,0.3);
+      color: var(--teal-dark);
+    }
+
+    .btn-submit {
+      width: 100%; padding: 14px;
+      background: var(--grad); border: none; color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1rem;
+      border-radius: 50px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.3s; letter-spacing: 0.3px;
+      box-shadow: 0 6px 20px rgba(74,157,150,0.3);
+    }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(74,157,150,0.4);
+    }
+    .btn-submit:disabled { opacity: 0.75; cursor: not-allowed; transform: none; }
+    .spin {
+      display: none; width: 18px; height: 18px;
+      border: 3px solid rgba(255,255,255,0.35);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .switch-cta {
+      text-align: center; font-size: 0.88rem;
+      color: #78818c; margin-top: 20px;
+    }
+    .switch-cta a { color: var(--teal-dark); font-weight: 800; text-decoration: none; }
+    .switch-cta a:hover { text-decoration: underline; }
+
+    .success-screen {
+      display: none; text-align: center;
+      padding: 10px 0 6px;
+    }
+    .success-anim {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--grad); margin: 0 auto 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; color: #fff;
+      animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .success-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; color: var(--warm-dark); margin-bottom: 8px;
+    }
+    .success-screen p { color: #78818c; font-size: 0.9rem; margin-bottom: 22px; }
+    .btn-go {
+      background: var(--grad); color: #fff; border: none;
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 0.95rem; padding: 13px 36px; border-radius: 50px;
+      cursor: pointer; transition: all 0.3s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 6px 20px rgba(74,157,150,0.3);
+    }
+    .btn-go:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(74,157,150,0.4); color: #fff; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 20px;
+      font-size: 0.78rem; color: #94a3b8;
+    }
+    .page-footer a { color: #94a3b8; text-decoration: none; }
+    .page-footer a:hover { color: var(--teal-dark); }
+
+    @media (max-width: 500px) {
+      .card-body { padding: 24px 20px 28px; }
+      .login-hero h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-wrap">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+  </div>
+
+  <nav class="nav">
+    <a href="landing.html" class="nav-brand">
+      <img src="MedLinkLogo.png" alt="MedLink" class="nav-logo" onerror="this.style.display='none'">
+      MedLink Clinic
+    </a>
+    <a href="landing.html" class="nav-back">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+  </nav>
+
+  <div class="page-body">
+    <div class="login-wrap">
+      <div class="login-hero">
+        <h1>Welcome Back</h1>
+        <p>Sign in to manage your appointments at MedLink Clinic</p>
+      </div>
+
+      <div class="login-card">
+        <div class="tab-bar">
+          <button class="tab-btn active" id="tabSignIn" onclick="switchTab('signin')">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+          </button>
+          <button class="tab-btn" id="tabForgot" onclick="switchTab('forgot')">
+            <i class="fas fa-key"></i> Forgot Password
+          </button>
+        </div>
+
+        <div class="card-body">
+          <div class="tab-panel active" id="panelSignin">
+            <div class="alert-box" id="signinAlert"></div>
+            <div class="success-screen" id="signinSuccess">
+              <div class="success-anim"><i class="fas fa-check"></i></div>
+              <h2>Welcome back!</h2>
+              <p id="successName">Taking you to your dashboard…</p>
+              <a href="index.html" class="btn-go" id="dashboardLink">
+                <i class="fas fa-home"></i> Go to Homepage
+              </a>
+            </div>
+            <div id="signinForm">
+              <div class="field">
+                <input type="email" id="siEmail" placeholder=" " autocomplete="email">
+                <label for="siEmail">Email Address</label>
+                <i class="fas fa-envelope fi"></i>
+                <div class="field-err" id="siEmailErr"></div>
+              </div>
+              <div class="field">
+                <input type="password" id="siPassword" placeholder=" " autocomplete="current-password">
+                <label for="siPassword">Password</label>
+                <button type="button" class="toggle-eye" onclick="toggleEye('siPassword','eyeSI')">
+                  <i class="fas fa-eye" id="eyeSI"></i>
+                </button>
+                <div class="field-err" id="siPasswordErr"></div>
+              </div>
+              <div class="forgot-row">
+                <a href="#" class="forgot-link" onclick="switchTab('forgot'); return false;">Forgot password?</a>
+              </div>
+              <button class="btn-submit" id="signinBtn" onclick="handleSignIn()">
+                <span id="signinBtnText">Sign In</span>
+                <i class="fas fa-arrow-right" id="signinBtnIcon"></i>
+                <div class="spin" id="signinSpin"></div>
+              </button>
+              <div class="switch-cta" style="margin-top:20px;">
+                Don't have an account? <a href="register.html">Create one free</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panelForgot">
+            <div class="alert-box" id="forgotAlert"></div>
+            <div id="forgotForm">
+              <p style="font-size:0.88rem;color:#64748b;margin-bottom:20px;line-height:1.6;">
+                Enter your registered email and we'll look up your account. Contact the clinic directly to reset your password.
+              </p>
+              <div class="field">
+                <input type="email" id="fpEmail" placeholder=" " autocomplete="email">
+                <label for="fpEmail">Registered Email</label>
+                <i class="fas fa-envelope fi"></i>
+                <div class="field-err" id="fpEmailErr"></div>
+              </div>
+              <button class="btn-submit" id="forgotBtn" onclick="handleForgot()">
+                <span id="forgotBtnText">Look Up Account</span>
+                <i class="fas fa-search" id="forgotBtnIcon"></i>
+                <div class="spin" id="forgotSpin"></div>
+              </button>
+            </div>
+            <div class="switch-cta">
+              Remembered it? <a href="#" onclick="switchTab('signin'); return false;">Back to Sign In</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    © 2025 MedLink Clinic · <a href="landing.html#specialties">Specialties</a> · <a href="#">Privacy</a>
+  </div>
+
+  <!-- Firebase SDK v9 Compat (Updated from v8) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <script>
+    // Firebase config hardcoded (bypassing 403 error on firebase-config.js)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJCit6L0ZXO0PpZ8UUZIulEB5ab4b42og",
+      authDomain: "medlink-clinic-c9246.firebaseapp.com",
+      databaseURL: "https://medlink-clinic-c9246-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "medlink-clinic-c9246",
+      storageBucket: "medlink-clinic-c9246.firebasestorage.app",
+      messagingSenderId: "236702575373",
+      appId: "1:236702575373:web:09620288c0fd2b48dcde44"
+    };
+
+    // Initialize Firebase if not already initialized
+    if (!firebase.apps || !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+      console.log('Firebase initialized from patient-login.html');
+    }
+
+    // Tab switcher
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      if (tab === 'signin') {
+        document.getElementById('tabSignIn').classList.add('active');
+        document.getElementById('panelSignin').classList.add('active');
+      } else {
+        document.getElementById('tabForgot').classList.add('active');
+        document.getElementById('panelForgot').classList.add('active');
+      }
+    }
+
+    function toggleEye(inputId, iconId) {
+      const inp = document.getElementById(inputId);
+      const ico = document.getElementById(iconId);
+      if (inp.type === 'password') { inp.type = 'text'; ico.className = 'fas fa-eye-slash'; }
+      else { inp.type = 'password'; ico.className = 'fas fa-eye'; }
+    }
+
+    function showAlert(id, msg, type) {
+      const el = document.getElementById(id);
+      el.className = `alert-box ${type} show`;
+      el.innerHTML = `<i class="fas fa-${type==='error'?'circle-exclamation':'circle-check'}"></i> <span>${msg}</span>`;
+    }
+    function hideAlert(id) {
+      document.getElementById(id).className = 'alert-box';
+    }
+
+    function setErr(id, msg) {
+      const e = document.getElementById(id + 'Err');
+      const i = document.getElementById(id);
+      if (e) { e.textContent = msg; e.classList.toggle('show', !!msg); }
+      if (i) { i.classList.toggle('err', !!msg); i.classList.toggle('ok', !msg && i.value.trim() !== ''); }
+    }
+
+    // Sign In
+    async function handleSignIn() {
+      hideAlert('signinAlert');
+      setErr('siEmail', ''); setErr('siPassword', '');
+
+      const email = document.getElementById('siEmail').value.trim().toLowerCase();
+      const password = document.getElementById('siPassword').value;
+
+      let valid = true;
+      if (!email) { setErr('siEmail', 'Email is required.'); valid = false; }
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr('siEmail', 'Enter a valid email.'); valid = false; }
+      if (!password) { setErr('siPassword', 'Password is required.'); valid = false; }
+      if (!valid) return;
+
+      const btn = document.getElementById('signinBtn');
+      const txt = document.getElementById('signinBtnText');
+      const icon = document.getElementById('signinBtnIcon');
+      const spin = document.getElementById('signinSpin');
+      btn.disabled = true; txt.textContent = 'Signing in…';
+      icon.style.display = 'none'; spin.style.display = 'inline-block';
+
+      try {
+        const db = firebase.database();
+        let matchedUser = null;
+        let matchedRef = null;
+        let patientId = null;
+
+        const emailKey = email.replace(/\./g, '_').replace(/@/g, '_');
+        const usersSnap = await db.ref(`users/${emailKey}`).once('value');
+        
+        if (usersSnap.exists()) {
+          const u = usersSnap.val();
+          const enteredHash = btoa('medlink:' + password);
+          if (u.passwordHash && u.passwordHash === enteredHash) {
+            matchedUser = u;
+            matchedRef = `users/${emailKey}`;
+          } else {
+            throw { code: 'WRONG_PASSWORD' };
+          }
+        }
+
+        if (!matchedUser) {
+          const patientsSnap = await db.ref('patients').once('value');
+          if (patientsSnap.exists()) {
+            patientsSnap.forEach(child => {
+              const p = child.val();
+              if (p.email && p.email.toLowerCase() === email) {
+                if (p.password === password) {
+                  matchedUser = {
+                    email: p.email,
+                    firstName: (p.fullName || '').split(' ')[0],
+                    lastName: (p.fullName || '').split(' ').slice(1).join(' ') || '',
+                    fullName: p.fullName,
+                    phone: p.phone || '',
+                    dob: p.dateOfBirth || '',
+                    sex: p.gender || ''
+                  };
+                  matchedRef = `patients/${child.key}`;
+                  patientId = child.key;
+                } else {
+                  throw { code: 'WRONG_PASSWORD' };
+                }
+              }
+            });
+          }
+        }
+
+        if (!matchedUser) throw { code: 'NOT_FOUND' };
+
+        await db.ref(matchedRef).update({ lastLogin: new Date().toISOString() });
+
+        sessionStorage.setItem('medlink_user', JSON.stringify({
+          patientId: patientId || emailKey,
+          email: matchedUser.email,
+          firstName: matchedUser.firstName,
+          lastName: matchedUser.lastName || '',
+          fullName: matchedUser.fullName || `${matchedUser.firstName} ${matchedUser.lastName || ''}`,
+          phone: matchedUser.phone || '',
+          sex: matchedUser.sex || '',
+          dob: matchedUser.dob || ''
+        }));
+
+        document.getElementById('signinForm').style.display = 'none';
+        const successEl = document.getElementById('signinSuccess');
+        successEl.style.display = 'block';
+        document.getElementById('successName').textContent = `Hi, ${matchedUser.firstName}! Redirecting...`;
+        document.getElementById('dashboardLink').href = 'index.html';
+
+        setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+
+      } catch (err) {
+        btn.disabled = false; txt.textContent = 'Sign In';
+        icon.style.display = 'inline'; spin.style.display = 'none';
+        console.error('Sign in error:', err);
+
+        if (err.code === 'NOT_FOUND') {
+          showAlert('signinAlert', 'No account found with that email. Please register first.', 'error');
+          setErr('siEmail', 'Email not registered.');
+        } else if (err.code === 'WRONG_PASSWORD') {
+          showAlert('signinAlert', 'Incorrect password. Please try again.', 'error');
+          setErr('siPassword', 'Incorrect password.');
+        } else {
+          showAlert('signinAlert', 'Unable to connect. Please check your internet and try again.', 'error');
+        }
+      }
+    }
+
+    // Forgot password
+    async function handleForgot() {
+      hideAlert('forgotAlert');
+      setErr('fpEmail', '');
+
+      const email = document.getElementById('fpEmail').value.trim().toLowerCase();
+      if (!email) { setErr('fpEmail', 'Email is required.'); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr('fpEmail', 'Enter a valid email.'); return; }
+
+      const btn = document.getElementById('forgotBtn');
+      const txt = document.getElementById('forgotBtnText');
+      const icon = document.getElementById('forgotBtnIcon');
+      const spin = document.getElementById('forgotSpin');
+      btn.disabled = true; txt.textContent = 'Checking…';
+      icon.style.display = 'none'; spin.style.display = 'inline-block';
+
+      try {
+        const db = firebase.database();
+        let found = null;
+
+        const emailKey = email.replace(/\./g, '_').replace(/@/g, '_');
+        const usersSnap = await db.ref(`users/${emailKey}`).once('value');
+        if (usersSnap.exists()) {
+          const u = usersSnap.val();
+          found = u.fullName || `${u.firstName || ''} ${u.lastName || ''}`.trim() || email;
+        }
+
+        if (!found) {
+          const pSnap = await db.ref('patients').once('value');
+          if (pSnap.exists()) {
+            pSnap.forEach(child => {
+              const p = child.val();
+              if (p.email && p.email.toLowerCase() === email) {
+                found = p.fullName || email;
+              }
+            });
+          }
+        }
+
+        btn.disabled = false; txt.textContent = 'Look Up Account';
+        icon.style.display = 'inline'; spin.style.display = 'none';
+
+        if (found) {
+          showAlert('forgotAlert', `Account found for <strong>${found}</strong>. Please call us at <strong>+63 905 517 7314</strong> or visit the clinic to reset your password.`, 'success');
+        } else {
+          showAlert('forgotAlert', 'No account found with that email. Please check the spelling or register.', 'error');
+          setErr('fpEmail', 'Email not registered.');
+        }
+      } catch (err) {
+        btn.disabled = false; txt.textContent = 'Look Up Account';
+        icon.style.display = 'inline'; spin.style.display = 'none';
+        showAlert('forgotAlert', 'Could not connect. Please try again or contact the clinic.', 'error');
+        console.error(err);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const active = document.querySelector('.tab-panel.active').id;
+      if (active === 'panelSignin') handleSignIn();
+      else handleForgot();
+    });
+  </script>
+</body>
+</html>

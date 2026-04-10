@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Appointments – MedLink Clinic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+  <style>
+    :root {
+      --teal-light:  #7dd3c9;
+      --teal-mid:    #5bc0b5;
+      --teal-dark:   #4a9d96;
+      --teal-deep:   #357870;
+      --warm-dark:   #50372c;
+      --cream:       #f5fffe;
+      --grad:        linear-gradient(135deg, #7dd3c9 0%, #5bc0b5 50%, #4a9d96 100%);
+      --card-shadow: 0 4px 24px rgba(74,157,150,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--warm-dark);
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    .topbar {
+      background: var(--grad);
+      padding: 0 5%;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 16px rgba(74,157,150,0.25);
+    }
+    .topbar-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700; font-size: 1.2rem;
+      color: #fff; text-decoration: none;
+    }
+    .topbar-logo {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.4); object-fit: cover;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .topbar-user {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 50px; padding: 6px 14px;
+      font-size: 0.88rem; font-weight: 700; color: #fff;
+    }
+    .topbar-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 800; color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      flex-shrink: 0;
+    }
+    .topbar-btn {
+      background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.4);
+      color: #fff; font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 0.82rem;
+      padding: 6px 14px; border-radius: 50px;
+      text-decoration: none; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 6px;
+      cursor: pointer;
+    }
+    .topbar-btn:hover { background: rgba(255,255,255,0.28); color: #fff; }
+
+    /* ── Not logged in gate ── */
+    .gate-screen {
+      min-height: calc(100vh - 64px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 20px;
+    }
+    .gate-card {
+      background: #fff; border-radius: 24px;
+      padding: 48px 40px; text-align: center;
+      box-shadow: var(--card-shadow); max-width: 420px; width: 100%;
+    }
+    .gate-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(125,211,201,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; color: var(--teal-dark);
+      margin: 0 auto 20px;
+    }
+    .gate-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; margin-bottom: 10px; color: var(--warm-dark);
+    }
+    .gate-card p { color: #78818c; font-size: 0.92rem; margin-bottom: 24px; line-height: 1.6; }
+    .btn-gate {
+      background: var(--grad); color: #fff; border: none;
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 0.95rem; padding: 12px 32px; border-radius: 50px;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.3s; box-shadow: 0 6px 20px rgba(74,157,150,0.3);
+    }
+    .btn-gate:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(74,157,150,0.4); color: #fff; }
+
+    /* ── Main layout ── */
+    .page-main {
+      max-width: 960px; margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+    }
+    .page-header-left {}
+    .page-header-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(125,211,201,0.15); color: var(--teal-dark);
+      padding: 4px 14px; border-radius: 50px;
+      font-size: 0.75rem; font-weight: 800;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem; font-weight: 800; color: var(--warm-dark);
+      line-height: 1.1;
+    }
+    .page-header h1 span { color: var(--teal-dark); }
+    .page-header-sub { color: #78818c; font-size: 0.88rem; margin-top: 4px; }
+
+    .btn-book-new {
+      background: var(--grad); color: #fff; border: none;
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 0.88rem; padding: 11px 22px; border-radius: 50px;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
+      transition: all 0.3s; box-shadow: 0 4px 16px rgba(74,157,150,0.3);
+      white-space: nowrap;
+    }
+    .btn-book-new:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(74,157,150,0.4); color: #fff; }
+
+    /* ── Filter tabs ── */
+    .filter-bar {
+      display: flex; gap: 8px; margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .filter-tab {
+      padding: 8px 18px; border-radius: 50px;
+      border: 1.5px solid rgba(125,211,201,0.3);
+      background: #fff; font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 0.82rem; color: #78818c;
+      cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .filter-tab:hover { border-color: var(--teal-mid); color: var(--teal-dark); }
+    .filter-tab.active {
+      background: var(--grad); color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(74,157,150,0.25);
+    }
+    .filter-tab .tab-count {
+      background: rgba(255,255,255,0.25); color: #fff;
+      width: 20px; height: 20px; border-radius: 50%;
+      font-size: 0.7rem; font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .filter-tab:not(.active) .tab-count {
+      background: rgba(125,211,201,0.18); color: var(--teal-dark);
+    }
+
+    /* ── Loading state ── */
+    .loading-wrap {
+      text-align: center; padding: 60px 20px;
+    }
+    .loading-spinner {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 4px solid rgba(125,211,201,0.2);
+      border-top-color: var(--teal-mid);
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-wrap p { color: #78818c; font-weight: 600; font-size: 0.92rem; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center; padding: 60px 20px;
+      background: #fff; border-radius: 20px;
+      box-shadow: var(--card-shadow);
+    }
+    .empty-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(125,211,201,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: var(--teal-light);
+      margin: 0 auto 20px;
+    }
+    .empty-state h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--warm-dark); margin-bottom: 8px;
+    }
+    .empty-state p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.6; }
+
+    /* ── Stats row ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 14px; margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #fff; border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--card-shadow);
+      border: 1.5px solid rgba(125,211,201,0.15);
+      display: flex; align-items: center; gap: 14px;
+      transition: all 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(74,157,150,0.15); }
+    .stat-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .stat-icon.teal  { background: rgba(125,211,201,0.15); color: var(--teal-dark); }
+    .stat-icon.green { background: rgba(34,197,94,0.12);   color: #16a34a; }
+    .stat-icon.amber { background: rgba(251,191,36,0.15);  color: #d97706; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 800; color: var(--warm-dark);
+      line-height: 1;
+    }
+    .stat-lbl { font-size: 0.76rem; color: #94a3b8; font-weight: 700; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── Appointment cards ── */
+    .apt-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .apt-card {
+      background: #fff; border-radius: 18px;
+      box-shadow: var(--card-shadow);
+      border: 1.5px solid rgba(125,211,201,0.15);
+      overflow: hidden;
+      transition: all 0.3s;
+      animation: slideUp 0.4s ease both;
+    }
+    .apt-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(74,157,150,0.16); border-color: rgba(125,211,201,0.35); }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Status left border */
+    .apt-card.status-pending   { border-left: 4px solid #fbbf24; }
+    .apt-card.status-confirmed { border-left: 4px solid #22c55e; }
+    .apt-card.status-cancelled { border-left: 4px solid #f87171; opacity: 0.72; }
+    .apt-card.status-completed { border-left: 4px solid var(--teal-mid); }
+
+    .apt-card-body {
+      padding: 20px 22px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 16px; align-items: start;
+    }
+
+    /* Date badge */
+    .apt-date-badge {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(125,211,201,0.1);
+      border: 1.5px solid rgba(125,211,201,0.2);
+      border-radius: 14px; padding: 10px 14px;
+      min-width: 64px; text-align: center; flex-shrink: 0;
+    }
+    .apt-date-badge .month {
+      font-size: 0.68rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--teal-dark);
+    }
+    .apt-date-badge .day {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem; font-weight: 800;
+      color: var(--warm-dark); line-height: 1;
+    }
+    .apt-date-badge .year {
+      font-size: 0.68rem; font-weight: 700; color: #94a3b8;
+    }
+
+    .apt-main { flex: 1; }
+    .apt-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 10px; gap: 8px; flex-wrap: wrap;
+    }
+    .apt-doctor {
+      font-weight: 800; font-size: 1rem; color: var(--warm-dark);
+    }
+    .apt-specialty {
+      font-size: 0.78rem; color: #78818c; font-weight: 600; margin-top: 2px;
+    }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: 50px;
+      font-size: 0.75rem; font-weight: 800;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .status-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .status-badge.pending   { background: rgba(251,191,36,0.15);  color: #d97706; }
+    .status-badge.pending .dot   { background: #fbbf24; }
+    .status-badge.confirmed { background: rgba(34,197,94,0.12);   color: #16a34a; }
+    .status-badge.confirmed .dot { background: #22c55e; }
+    .status-badge.cancelled { background: rgba(248,113,113,0.12); color: #dc2626; }
+    .status-badge.cancelled .dot { background: #f87171; }
+    .status-badge.completed { background: rgba(125,211,201,0.15); color: var(--teal-dark); }
+    .status-badge.completed .dot { background: var(--teal-mid); }
+
+    /* Meta info row */
+    .apt-meta {
+      display: flex; flex-wrap: wrap; gap: 14px;
+      margin-bottom: 14px;
+    }
+    .apt-meta-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.82rem; color: #5a6470; font-weight: 600;
+    }
+    .apt-meta-item i { color: var(--teal-mid); font-size: 0.78rem; width: 14px; text-align: center; }
+
+    /* Reason chip */
+    .apt-reason {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(125,211,201,0.08);
+      border: 1px solid rgba(125,211,201,0.2);
+      border-radius: 8px; padding: 6px 12px;
+      font-size: 0.8rem; color: #5a6470; font-weight: 600;
+      margin-bottom: 14px; max-width: 100%;
+    }
+    .apt-reason i { color: var(--teal-mid); }
+    .apt-reason span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Actions */
+    .apt-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .btn-cancel-apt {
+      background: none; border: 1.5px solid #fca5a5;
+      color: #dc2626; font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 0.8rem;
+      padding: 7px 16px; border-radius: 50px;
+      cursor: pointer; transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-cancel-apt:hover { background: #fee2e2; border-color: #f87171; }
+    .apt-id { font-size: 0.72rem; color: #cbd5e1; font-weight: 700; }
+
+    /* Cancelled label */
+    .cancelled-label {
+      font-size: 0.78rem; color: #f87171; font-weight: 700;
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ── Cancel modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      z-index: 9000; display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: #fff; border-radius: 20px;
+      padding: 32px 28px; max-width: 420px; width: 100%;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+      transform: translateY(20px) scale(0.97);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+    .modal-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--warm-dark); margin-bottom: 8px;
+    }
+    .modal-box p { color: #78818c; font-size: 0.88rem; line-height: 1.6; margin-bottom: 20px; }
+    .modal-apt-info {
+      background: rgba(125,211,201,0.08);
+      border: 1.5px solid rgba(125,211,201,0.2);
+      border-radius: 12px; padding: 14px 16px;
+      margin-bottom: 20px; font-size: 0.85rem; color: var(--warm-dark);
+    }
+    .modal-apt-info strong { color: var(--teal-dark); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-modal-cancel-no {
+      background: none; border: 1.5px solid rgba(125,211,201,0.3);
+      color: #78818c; font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 0.88rem;
+      padding: 10px 22px; border-radius: 50px; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-modal-cancel-no:hover { border-color: var(--teal-mid); color: var(--teal-dark); }
+    .btn-modal-cancel-yes {
+      background: linear-gradient(135deg, #f87171, #ef4444);
+      border: none; color: #fff;
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 0.88rem; padding: 10px 22px; border-radius: 50px;
+      cursor: pointer; transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 7px;
+    }
+    .btn-modal-cancel-yes:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(239,68,68,0.3); }
+    .btn-modal-cancel-yes:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .cancel-spin {
+      display: none; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+
+    /* ── Toast ── */
+    #aptToast {
+      position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+      padding: 14px 20px; border-radius: 14px;
+      font-size: 0.88rem; font-weight: 700; color: #fff;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+      transform: translateY(80px); opacity: 0;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 320px;
+    }
+    #aptToast.show { transform: translateY(0); opacity: 1; }
+    #aptToast.success { background: linear-gradient(135deg, #5bc0b5, #4a9d96); }
+    #aptToast.error   { background: linear-gradient(135deg, #f87171, #ef4444); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .stats-row .stat-card:last-child { grid-column: 1 / -1; }
+      .apt-card-body { grid-template-columns: 1fr; }
+      .apt-date-badge { flex-direction: row; gap: 8px; align-items: center; width: fit-content; padding: 8px 14px; }
+      .apt-date-badge .day { font-size: 1.2rem; }
+      .topbar-user span { display: none; }
+      .page-header { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 400px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .stats-row .stat-card:last-child { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Topbar ── -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-brand">
+      <img src="MedLinkLogo.png" alt="MedLink" class="topbar-logo" onerror="this.style.display='none'">
+      MedLink Clinic
+    </a>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-avatar" id="topAvatar">P</div>
+        <span id="topName">Patient</span>
+      </div>
+      <a href="index.html" class="topbar-btn">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <button class="topbar-btn" onclick="doLogout()">
+        <i class="fas fa-sign-out-alt"></i> Sign Out
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Gate: not logged in ── -->
+  <div class="gate-screen" id="gateScreen" style="display:none;">
+    <div class="gate-card">
+      <div class="gate-icon"><i class="fas fa-lock"></i></div>
+      <h2>Sign In Required</h2>
+      <p>You need to be signed in to view your appointments. Please sign in to your MedLink patient account.</p>
+      <a href="patient-login.html" class="btn-gate">
+        <i class="fas fa-sign-in-alt"></i> Sign In to MedLink
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Main content ── -->
+  <main class="page-main" id="mainContent" style="display:none;">
+
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-tag"><i class="fas fa-calendar-check"></i> Patient Portal</div>
+        <h1>My <span>Appointments</span></h1>
+        <p class="page-header-sub" id="headerSub">Loading your appointments…</p>
+      </div>
+      <a href="index.html#booking" class="btn-book-new">
+        <i class="fas fa-plus"></i> Book New Appointment
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow" style="display:none;">
+      <div class="stat-card">
+        <div class="stat-icon teal"><i class="fas fa-calendar-alt"></i></div>
+        <div>
+          <div class="stat-num" id="statTotal">0</div>
+          <div class="stat-lbl">Total</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-calendar-check"></i></div>
+        <div>
+          <div class="stat-num" id="statActive">0</div>
+          <div class="stat-lbl">Active</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber"><i class="fas fa-clock"></i></div>
+        <div>
+          <div class="stat-num" id="statPending">0</div>
+          <div class="stat-lbl">Pending</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="filter-bar" id="filterBar" style="display:none;">
+      <button class="filter-tab active" data-filter="all" onclick="applyFilter('all', this)">
+        <i class="fas fa-list"></i> All <span class="tab-count" id="countAll">0</span>
+      </button>
+      <button class="filter-tab" data-filter="pending" onclick="applyFilter('pending', this)">
+        <i class="fas fa-clock"></i> Pending <span class="tab-count" id="countPending">0</span>
+      </button>
+      <button class="filter-tab" data-filter="confirmed" onclick="applyFilter('confirmed', this)">
+        <i class="fas fa-check-circle"></i> Confirmed <span class="tab-count" id="countConfirmed">0</span>
+      </button>
+      <button class="filter-tab" data-filter="cancelled" onclick="applyFilter('cancelled', this)">
+        <i class="fas fa-times-circle"></i> Cancelled <span class="tab-count" id="countCancelled">0</span>
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loadingState" class="loading-wrap">
+      <div class="loading-spinner"></div>
+      <p>Fetching your appointments…</p>
+    </div>
+
+    <!-- Appointment list -->
+    <div class="apt-list" id="aptList" style="display:none;"></div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="empty-icon"><i class="fas fa-calendar-times"></i></div>
+      <h3 id="emptyTitle">No appointments found</h3>
+      <p id="emptyMsg">You don't have any appointments yet. Book your first appointment with one of our specialists.</p>
+      <a href="index.html#booking" class="btn-gate">
+        <i class="fas fa-calendar-plus"></i> Book an Appointment
+      </a>
+    </div>
+
+  </main>
+
+  <!-- ── Cancel confirmation modal ── -->
+  <div class="modal-overlay" id="cancelModal">
+    <div class="modal-box">
+      <h3>Cancel Appointment?</h3>
+      <p>Are you sure you want to cancel this appointment? This action cannot be undone.</p>
+      <div class="modal-apt-info" id="modalAptInfo">
+        <!-- populated dynamically -->
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal-cancel-no" onclick="closeModal()">Keep It</button>
+        <button class="btn-modal-cancel-yes" id="confirmCancelBtn" onclick="confirmCancel()">
+          <span id="cancelBtnText">Yes, Cancel</span>
+          <div class="cancel-spin" id="cancelSpin"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="aptToast"><i id="toastIcon" class="fas fa-circle-check"></i> <span id="toastMsg"></span></div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ─── State ───────────────────────────────────────────────────
+    let allAppointments  = [];  // full list fetched from Firebase
+    let currentFilter    = 'all';
+    let pendingCancelId  = null;
+    let currentUser      = null;
+    const db             = firebase.database();
+
+    // ─── Toast ──────────────────────────────────────────────────
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('aptToast');
+      document.getElementById('toastIcon').className = type === 'success' ? 'fas fa-circle-check' : 'fas fa-circle-xmark';
+      document.getElementById('toastMsg').textContent = msg;
+      t.className = `show ${type}`;
+      setTimeout(() => { t.className = ''; }, 3800);
+    }
+
+    // ─── Date helpers ────────────────────────────────────────────
+    function fmtDate(dateStr) {
+      if (!dateStr) return '—';
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+    function fmtDateParts(dateStr) {
+      if (!dateStr) return { month: '—', day: '—', year: '—' };
+      const d = new Date(dateStr + 'T00:00:00');
+      return {
+        month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
+        day:   d.getDate(),
+        year:  d.getFullYear()
+      };
+    }
+    function fmtTime(t) {
+      if (!t) return '—';
+      const [h, m] = t.split(':');
+      const hour = parseInt(h);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const h12  = hour % 12 || 12;
+      return `${h12}:${m} ${ampm}`;
+    }
+    function isPast(dateStr) {
+      return new Date(dateStr + 'T23:59:59') < new Date();
+    }
+
+    // ─── Get doctor name from Firebase ──────────────────────────
+    const doctorCache = {};
+    async function getDoctorName(doctorId) {
+      if (!doctorId) return 'Unknown Doctor';
+      if (doctorCache[doctorId]) return doctorCache[doctorId];
+      try {
+        const snap = await db.ref(`doctors/${doctorId}`).once('value');
+        const name = snap.val()?.name || doctorId;
+        doctorCache[doctorId] = name;
+        return name;
+      } catch { return doctorId; }
+    }
+
+    // ─── Fetch appointments ──────────────────────────────────────
+    async function fetchAppointments(user) {
+      try {
+        const snap = await db.ref('appointments').once('value');
+        const raw  = snap.val() || {};
+
+        const name  = (user.fullName || `${user.firstName} ${user.lastName}`).toLowerCase().trim();
+        const phone = (user.phone || '').replace(/\s/g, '');
+
+        const matched = [];
+        for (const [id, apt] of Object.entries(raw)) {
+          const nameMatch  = apt.name && apt.name.toLowerCase().trim() === name;
+          // also try phone match as fallback (in case name casing differs)
+          const phoneMatch = phone && apt.phone && apt.phone.replace(/\s/g, '') === phone;
+          // Match by name AND (phone match OR no phone stored yet)
+          if (nameMatch || (phoneMatch && nameMatch)) {
+            const doctorName = await getDoctorName(apt.doctor);
+            matched.push({ id, ...apt, doctorName });
+          }
+        }
+
+        // Sort: upcoming first, then by date desc
+        matched.sort((a, b) => new Date(b.date) - new Date(a.date));
+        return matched;
+
+      } catch (err) {
+        console.error('Fetch error:', err);
+        throw err;
+      }
+    }
+
+    // ─── Count helpers ───────────────────────────────────────────
+    function countByStatus(apts, status) {
+      return apts.filter(a => a.status === status).length;
+    }
+
+    // ─── Render ──────────────────────────────────────────────────
+    function renderAppointments(filter) {
+      currentFilter = filter;
+      const list = document.getElementById('aptList');
+      const empty = document.getElementById('emptyState');
+
+      let filtered = allAppointments;
+      if (filter !== 'all') {
+        filtered = allAppointments.filter(a => a.status === filter);
+      }
+
+      if (filtered.length === 0) {
+        list.style.display  = 'none';
+        empty.style.display = 'block';
+        const msgs = {
+          all:       { title: 'No appointments yet', msg: 'Book your first appointment with one of our specialists.' },
+          pending:   { title: 'No pending appointments', msg: 'You have no appointments waiting for confirmation.' },
+          confirmed: { title: 'No confirmed appointments', msg: 'None of your appointments have been confirmed yet.' },
+          cancelled: { title: 'No cancelled appointments', msg: 'You have not cancelled any appointments.' },
+        };
+        document.getElementById('emptyTitle').textContent = msgs[filter]?.title || 'No appointments';
+        document.getElementById('emptyMsg').textContent   = msgs[filter]?.msg   || '';
+        return;
+      }
+
+      empty.style.display = 'none';
+      list.style.display  = 'flex';
+      list.innerHTML = '';
+
+      filtered.forEach((apt, idx) => {
+        const dp     = fmtDateParts(apt.date);
+        const status = apt.status || 'pending';
+        // Auto-mark as completed if past date and not cancelled
+        const displayStatus = (status !== 'cancelled' && isPast(apt.date)) ? 'completed' : status;
+
+        const statusLabels = {
+          pending:   'Awaiting Confirmation',
+          confirmed: 'Confirmed',
+          cancelled: 'Cancelled',
+          completed: 'Completed',
+        };
+
+        const canCancel = (status === 'pending' || status === 'confirmed') && !isPast(apt.date);
+
+        const card = document.createElement('div');
+        card.className = `apt-card status-${displayStatus}`;
+        card.style.animationDelay = `${idx * 0.06}s`;
+        card.innerHTML = `
+          <div class="apt-card-body">
+            <div style="display:flex;gap:16px;align-items:flex-start;min-width:0;">
+              <div class="apt-date-badge">
+                <div class="month">${dp.month}</div>
+                <div class="day">${dp.day}</div>
+                <div class="year">${dp.year}</div>
+              </div>
+              <div class="apt-main" style="min-width:0;">
+                <div class="apt-top">
+                  <div>
+                    <div class="apt-doctor">${apt.doctorName || 'Doctor'}</div>
+                    <div class="apt-specialty">${apt.specialty || getDoctorSpecialty(apt.doctor)}</div>
+                  </div>
+                  <span class="status-badge ${displayStatus}">
+                    <span class="dot"></span>
+                    ${statusLabels[displayStatus] || status}
+                  </span>
+                </div>
+                <div class="apt-meta">
+                  <div class="apt-meta-item"><i class="fas fa-clock"></i> ${fmtTime(apt.time)}</div>
+                  <div class="apt-meta-item"><i class="fas fa-phone"></i> ${apt.phone || '—'}</div>
+                  ${apt.email ? `<div class="apt-meta-item"><i class="fas fa-envelope"></i> ${apt.email}</div>` : ''}
+                </div>
+                ${apt.reason ? `
+                <div class="apt-reason">
+                  <i class="fas fa-notes-medical"></i>
+                  <span>${apt.reason}</span>
+                </div>` : ''}
+                <div class="apt-actions">
+                  ${canCancel ? `
+                  <button class="btn-cancel-apt" onclick="openCancelModal('${apt.id}', '${apt.doctorName?.replace(/'/g,"\\'")}', '${apt.date}', '${fmtTime(apt.time)}')">
+                    <i class="fas fa-times"></i> Cancel Appointment
+                  </button>` : ''}
+                  ${displayStatus === 'cancelled' ? `<span class="cancelled-label"><i class="fas fa-ban"></i> Cancelled on ${apt.cancelledAt ? new Date(apt.cancelledAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'}</span>` : ''}
+                  ${displayStatus === 'completed' ? `<span class="cancelled-label" style="color:var(--teal-mid);"><i class="fas fa-check-circle"></i> Visit completed</span>` : ''}
+                  <span class="apt-id">ID: ${apt.id.substring(0,8).toUpperCase()}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    // Fallback: try to get specialty from doctor ID prefix convention
+    function getDoctorSpecialty(doctorId) {
+      if (!doctorId) return '';
+      if (doctorCache[doctorId + '_spec']) return doctorCache[doctorId + '_spec'];
+      return '';
+    }
+
+    // ─── Filter tabs ────────────────────────────────────────────
+    function applyFilter(filter, btn) {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      renderAppointments(filter);
+    }
+
+    // ─── Update stats & tab counts ───────────────────────────────
+    function updateStats(apts) {
+      const total     = apts.length;
+      const pending   = countByStatus(apts, 'pending');
+      const confirmed = countByStatus(apts, 'confirmed');
+      const cancelled = countByStatus(apts, 'cancelled');
+      const active    = pending + confirmed;
+
+      document.getElementById('statTotal').textContent   = total;
+      document.getElementById('statActive').textContent  = active;
+      document.getElementById('statPending').textContent = pending;
+
+      document.getElementById('countAll').textContent       = total;
+      document.getElementById('countPending').textContent   = pending;
+      document.getElementById('countConfirmed').textContent = confirmed;
+      document.getElementById('countCancelled').textContent = cancelled;
+    }
+
+    // ─── Cancel modal ────────────────────────────────────────────
+    function openCancelModal(aptId, doctorName, date, time) {
+      pendingCancelId = aptId;
+      document.getElementById('modalAptInfo').innerHTML = `
+        <div><strong>Doctor:</strong> ${doctorName}</div>
+        <div><strong>Date:</strong> ${fmtDate(date)}</div>
+        <div><strong>Time:</strong> ${time}</div>
+      `;
+      document.getElementById('cancelModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('cancelModal').classList.remove('open');
+      document.body.style.overflow = '';
+      pendingCancelId = null;
+    }
+
+    async function confirmCancel() {
+      if (!pendingCancelId) return;
+
+      const btn  = document.getElementById('confirmCancelBtn');
+      const txt  = document.getElementById('cancelBtnText');
+      const spin = document.getElementById('cancelSpin');
+      btn.disabled = true; txt.textContent = 'Cancelling…'; spin.style.display = 'inline-block';
+
+      try {
+        await db.ref(`appointments/${pendingCancelId}`).update({
+          status:             'cancelled',
+          cancelledAt:        new Date().toISOString(),
+          cancelledBy:        'patient',
+          cancellationReason: 'Patient requested cancellation'
+        });
+
+        // Update local state
+        const idx = allAppointments.findIndex(a => a.id === pendingCancelId);
+        if (idx > -1) {
+          allAppointments[idx].status      = 'cancelled';
+          allAppointments[idx].cancelledAt = new Date().toISOString();
+        }
+
+        closeModal();
+        updateStats(allAppointments);
+        renderAppointments(currentFilter);
+        showToast('Appointment cancelled successfully.', 'success');
+
+      } catch (err) {
+        console.error('Cancel error:', err);
+        showToast('Could not cancel appointment. Please try again.', 'error');
+        btn.disabled = false; txt.textContent = 'Yes, Cancel'; spin.style.display = 'none';
+      }
+    }
+
+    // Close modal on overlay click
+    document.getElementById('cancelModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // ─── Logout ──────────────────────────────────────────────────
+    function doLogout() {
+      sessionStorage.removeItem('medlink_user');
+      sessionStorage.removeItem('medlink_welcomed');
+      window.location.replace('landing.html');
+    }
+
+    // ─── Boot ────────────────────────────────────────────────────
+    async function boot() {
+      const raw = sessionStorage.getItem('medlink_user');
+
+      if (!raw) {
+        // Not logged in — show gate
+        document.getElementById('gateScreen').style.display  = 'flex';
+        document.getElementById('mainContent').style.display = 'none';
+        return;
+      }
+
+      currentUser = JSON.parse(raw);
+      const firstName = currentUser.firstName || currentUser.fullName.split(' ')[0];
+      const initials  = ((currentUser.firstName || '?')[0] + (currentUser.lastName || '?')[0]).toUpperCase();
+
+      // Populate topbar
+      document.getElementById('topAvatar').textContent = initials;
+      document.getElementById('topName').textContent   = firstName;
+
+      // Show main
+      document.getElementById('gateScreen').style.display  = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+
+      // Fetch
+      try {
+        allAppointments = await fetchAppointments(currentUser);
+
+        document.getElementById('loadingState').style.display = 'none';
+
+        const total = allAppointments.length;
+        document.getElementById('headerSub').textContent =
+          total === 0
+            ? `Welcome, ${firstName}! You have no appointments yet.`
+            : `Welcome back, ${firstName}! You have ${total} appointment${total > 1 ? 's' : ''} on record.`;
+
+        if (total > 0) {
+          document.getElementById('statsRow').style.display  = 'grid';
+          document.getElementById('filterBar').style.display = 'flex';
+          updateStats(allAppointments);
+        }
+
+        renderAppointments('all');
+
+      } catch (err) {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('emptyState').style.display   = 'block';
+        document.getElementById('emptyTitle').textContent = 'Could not load appointments';
+        document.getElementById('emptyMsg').textContent   = 'There was a problem connecting to the server. Please refresh the page.';
+        showToast('Failed to load appointments. Please refresh.', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', boot);
+  </script>
+</body>
+</html>

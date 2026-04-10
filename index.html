@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedLink Clinic - Quality Healthcare in Marikina</title>
+  <meta name="description" content="MedLink Clinic provides quality healthcare services in Marikina with expert doctors and modern facilities. Book your appointment online today.">
+  <meta name="keywords" content="clinic, healthcare, doctor, appointment, Marikina, medical services">
+  
+  <meta property="og:title" content="MedLink Clinic - Quality Healthcare in Marikina">
+  <meta property="og:description" content="Your trusted healthcare partner in Marikina. Book appointments with expert doctors online.">
+  <meta property="og:type" content="website">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="xstyle.css">
+  <link rel="preload" href="xstyle.css" as="style">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+  <a href="#main-content" class="skip-link visually-hidden-focusable">Skip to main content</a>
+
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="#" aria-label="MedLink Clinic Home">
+        <img id="siteLogo" src="MedLinkLogo.png" alt="MedLink Clinic Logo" class="navbar-logo me-2 lazy" loading="lazy">
+        MedLink Clinic
+      </a>
+      <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="#services">Services</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#booking">Book Appointment</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#about">About</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#contact">Contact</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="chat.html"><i class="fas fa-comments me-1"></i>Chat</a>
+  </li>
+  <!-- Guest buttons (shown when not logged in) -->
+  <li class="nav-item" id="navGuest" style="display:flex;align-items:center;gap:6px;">
+    <a class="nav-link nav-btn-login" href="patient-login.html">
+      <i class="fas fa-sign-in-alt me-1"></i> Sign In
+    </a>
+    <a class="nav-link nav-btn-signup" href="register.html">
+      <i class="fas fa-user-plus me-1"></i> Sign Up
+    </a>
+  </li>
+
+  <!-- Patient profile (shown when logged in) -->
+  <li class="nav-item dropdown" id="navPatient" style="display:none;">
+    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="patientDropdown"
+       data-bs-toggle="dropdown" aria-expanded="false" style="background:rgba(255,255,255,0.18);border-radius:50px;padding:7px 16px;">
+      <span class="patient-avatar" id="navAvatar">P</span>
+      <span id="navPatientName">Patient</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end patient-dropdown" aria-labelledby="patientDropdown">
+      <li>
+        <div class="dropdown-header-custom">
+          <div class="dh-avatar" id="dropAvatar">P</div>
+          <div>
+            <div class="dh-name" id="dropFullName">Patient</div>
+            <div class="dh-email" id="dropEmail">—</div>
+          </div>
+        </div>
+      </li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item" href="#booking"><i class="fas fa-calendar-plus me-2"></i>Book Appointment</a></li>
+      <li><a class="dropdown-item" href="my-appointments.html"><i class="fas fa-calendar-check me-2"></i>My Appointments</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item text-danger" href="#" onclick="patientLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+    </ul>
+  </li>
+</ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── AUTH GUARD: redirect to landing if not logged in ── -->
+  <script>
+    (function() {
+      if (!sessionStorage.getItem('medlink_user')) {
+        window.location.replace('landing.html');
+      }
+    })();
+  </script>
+
+  <main id="main-content">
+    <section class="hero-section py-5" aria-labelledby="heroHeading">
+      <div class="container py-5">
+        <div class="row align-items-center">
+          <div class="col-lg-6 hero-content">
+            <h1 class="display-4 fw-bold text-white mb-3" id="heroHeading">Your Health, Our Priority</h1>
+            <p class="lead text-white mb-4" id="heroDescription">Your trusted healthcare clinic is now open 24/7! We're here for you every day, all day, with expert doctors and modern facilities.</p>
+            <div class="d-flex flex-wrap gap-2 mb-4" role="list" aria-label="Medical specialties">
+               <span class="specialty-badge" role="listitem">General Medicine</span>
+               <span class="specialty-badge" role="listitem">Family Medicine</span>
+               <span class="specialty-badge" role="listitem">Internal Medicine</span>
+               <span class="specialty-badge" role="listitem">Pediatrics</span>
+               <span class="specialty-badge" role="listitem">Ophthalmology</span>
+               <span class="specialty-badge" role="listitem">Orthopedics</span>
+               <span class="specialty-badge" role="listitem">Obstetrics and Gynecology</span>
+               <span class="specialty-badge" role="listitem">ENT</span>
+              <span class="specialty-badge" role="listitem">Pathology</span>
+            </div>
+            <button type="button" class="btn btn-custom" id="heroBookingBtn" aria-label="Book an appointment now">
+              <span id="heroButtonText">Book Appointment</span>
+            </button>
+          </div>
+          <div class="col-lg-6 text-center mt-5 mt-lg-0">
+            <div class="hero-visual-wrap">
+
+              <!-- Decorative rings -->
+              <div class="hero-ring hero-ring-1"></div>
+              <div class="hero-ring hero-ring-2"></div>
+              <div class="hero-ring hero-ring-3"></div>
+
+              <!-- Glow blob -->
+              <div class="hero-glow"></div>
+
+              <!-- Main illustration card -->
+              <div class="hero-img-card">
+                <div class="hero-img-inner">
+                  <img src="doctorillustration.png"
+                       alt="Friendly doctor illustration showing healthcare professional"
+                       id="doctorIllustration" class="lazy" loading="lazy">
+                </div>
+                <div class="hero-img-shimmer"></div>
+              </div>
+
+              <!-- Floating chip: Open 24/7 -->
+              <div class="hero-chip hero-chip-top">
+                <div class="hero-chip-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="hero-chip-text">
+                  <div class="hero-chip-label">Availability</div>
+                  <div class="hero-chip-value">Open 24 / 7</div>
+                </div>
+              </div>
+
+              <!-- Floating chip: Patients -->
+              <div class="hero-chip hero-chip-left">
+                <div class="hero-chip-icon hero-chip-icon--green">
+                  <i class="fas fa-user-check"></i>
+                </div>
+                <div class="hero-chip-text">
+                  <div class="hero-chip-label">Trusted by</div>
+                  <div class="hero-chip-value">1000+ Patients</div>
+                </div>
+              </div>
+
+              <!-- Floating chip: Rating -->
+              <div class="hero-chip hero-chip-bottom">
+                <div class="hero-chip-icon hero-chip-icon--amber">
+                  <i class="fas fa-star"></i>
+                </div>
+                <div class="hero-chip-text">
+                  <div class="hero-chip-label">Patient Rating</div>
+                  <div class="hero-chip-value">4.9 / 5.0 ★</div>
+                </div>
+              </div>
+
+              <!-- Floating dots -->
+              <div class="hero-dot hero-dot-1"></div>
+              <div class="hero-dot hero-dot-2"></div>
+              <div class="hero-dot hero-dot-3"></div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENHANCED SERVICES SECTION -->
+    <section id="services" class="py-5" aria-labelledby="servicesHeading">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="fw-bold" id="servicesHeading">Our Medical Specialties</h2>
+          <p class="text-muted">Comprehensive healthcare services tailored to your needs</p>
+        </div>
+        
+        <!-- Specialty Navigation Tabs - FIXED VERSION -->
+        <div class="row justify-content-center mb-5">
+          <div class="col-12">
+            <div class="specialty-tabs-container">
+              <div class="specialty-tabs-scroll" role="tablist" aria-label="Filter services by specialty">
+                <button type="button" class="specialty-tab active" data-specialty="all" onclick="handleSpecialtyTabClick(this, 'all')" role="tab" aria-selected="true" aria-controls="servicesGrid">
+                  <i class="fas fa-star me-2" aria-hidden="true"></i>All Specialties
+                </button>
+                <button type="button" class="specialty-tab" data-specialty="General Medicine" onclick="handleSpecialtyTabClick(this, 'General Medicine')" role="tab" aria-selected="false" aria-controls="servicesGrid">
+                  <i class="fas fa-user-md me-2" aria-hidden="true"></i>General Medicine
+                </button>
+                <button type="button" class="specialty-tab" data-specialty="Pediatrics" onclick="handleSpecialtyTabClick(this, 'Pediatrics')" role="tab" aria-selected="false" aria-controls="servicesGrid">
+                  <i class="fas fa-baby me-2" aria-hidden="true"></i>Pediatrics
+                </button>
+                <button type="button" class="specialty-tab" data-specialty="Internal Medicine" onclick="handleSpecialtyTabClick(this, 'Internal Medicine')" role="tab" aria-selected="false" aria-controls="servicesGrid">
+                  <i class="fas fa-stethoscope me-2" aria-hidden="true"></i>Internal Medicine
+                </button>
+                <button type="button" class="specialty-tab" data-specialty="Family Medicine" onclick="handleSpecialtyTabClick(this, 'Family Medicine')" role="tab" aria-selected="false" aria-controls="servicesGrid">
+                  <i class="fas fa-users me-2" aria-hidden="true"></i>Family Medicine
+                </button>
+                <button type="button" class="specialty-tab" data-specialty="Ophthalmology" onclick="handleSpecialtyTabClick(this, 'Ophthalmology')" role="tab" aria-selected="false" aria-controls="servicesGrid">
+                  <i class="fas fa-eye" aria-hidden="true"></i>Ophthalmology
+                </button>
+                <button type="button" class="specialty-tab" data-specialty="Orthopedics" onclick="handleSpecialtyTabClick(this, 'Orthopedics')" role="tab" aria-selected="false" aria-controls="servicesGrid">
+                  <i class="fas fa-bone" aria-hidden="true"></i>Orthopedics
+                </button>
+                <button type="button" class="specialty-tab" data-specialty="Obstetrics and Gynecology" onclick="handleSpecialtyTabClick(this, 'Obstetrics and Gynecology')" role="tab" aria-selected="false" aria-controls="servicesGrid">
+                  <i class="fas fa-female" aria-hidden="true"></i>Obstetrics and Gynecology
+                </button>
+                <button type="button" class="specialty-tab" data-specialty="ENT" onclick="handleSpecialtyTabClick(this, 'ENT')" role="tab" aria-selected="false" aria-controls="servicesGrid">
+                  <i class="fas fa-head-side-cough" aria-hidden="true"></i>ENT
+                </button>
+                <button type="button" class="specialty-tab" data-specialty="Pathology" onclick="handleSpecialtyTabClick(this, 'Pathology')" role="tab" aria-selected="false" aria-controls="servicesGrid">
+                  <i class="fas fa-microscope me-2" aria-hidden="true"></i>Pathology
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="row g-4" id="servicesGrid" role="region" aria-live="polite">
+          <!-- Service cards will be populated dynamically or statically -->
+          <!-- General Medicine -->
+          <div class="col-md-6 col-lg-4" data-specialty="General Medicine">
+            <div class="service-card h-100">
+              <div class="service-card-inner">
+                <div class="service-card-front">
+                  <div class="service-icon" aria-hidden="true">
+                    <i class="fas fa-user-md"></i>
+                  </div>
+                  <h3 class="service-title h5">General Medicine</h3>
+                  <p class="service-description">Comprehensive care for common illnesses and preventive health</p>
+                  <div class="service-badge">Primary Care</div>
+                </div>
+                <div class="service-card-back">
+                  <h4 class="h6">What We Offer:</h4>
+                  <ul>
+                    <li>Health check-ups</li>
+                    <li>Illness diagnosis</li>
+                    <li>Preventive care</li>
+                    <li>Chronic disease management</li>
+                  </ul>
+                  <button type="button" class="btn-book-specialty" data-specialty="General Medicine" aria-label="Book appointment for General Medicine">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pediatrics -->
+          <div class="col-md-6 col-lg-4" data-specialty="Pediatrics">
+            <div class="service-card h-100">
+              <div class="service-card-inner">
+                <div class="service-card-front">
+                  <div class="service-icon" aria-hidden="true">
+                    <i class="fas fa-baby"></i>
+                  </div>
+                  <h3 class="service-title h5">Pediatrics</h3>
+                  <p class="service-description">Specialized healthcare for infants, children, and adolescents</p>
+                  <div class="service-badge">Child Care</div>
+                </div>
+                <div class="service-card-back">
+                  <h4 class="h6">What We Offer:</h4>
+                  <ul>
+                    <li>Well-child visits</li>
+                    <li>Vaccinations</li>
+                    <li>Growth monitoring</li>
+                    <li>Childhood illness treatment</li>
+                  </ul>
+                  <button type="button" class="btn-book-specialty" data-specialty="Pediatrics" aria-label="Book appointment for Pediatrics">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Internal Medicine -->
+          <div class="col-md-6 col-lg-4" data-specialty="Internal Medicine">
+            <div class="service-card h-100">
+              <div class="service-card-inner">
+                <div class="service-card-front">
+                  <div class="service-icon" aria-hidden="true">
+                    <i class="fas fa-stethoscope"></i>
+                  </div>
+                  <h3 class="service-title h5">Internal Medicine</h3>
+                  <p class="service-description">Expert care for complex adult health conditions and diseases</p>
+                  <div class="service-badge">Adult Care</div>
+                </div>
+                <div class="service-card-back">
+                  <h4 class="h6">What We Offer:</h4>
+                  <ul>
+                    <li>Chronic disease management</li>
+                    <li>Complex diagnosis</li>
+                    <li>Preventive screening</li>
+                    <li>Health risk assessment</li>
+                  </ul>
+                  <button type="button" class="btn-book-specialty" data-specialty="Internal Medicine" aria-label="Book appointment for Internal Medicine">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Family Medicine -->
+          <div class="col-md-6 col-lg-4" data-specialty="Family Medicine">
+            <div class="service-card h-100">
+              <div class="service-card-inner">
+                <div class="service-card-front">
+                  <div class="service-icon" aria-hidden="true">
+                    <i class="fas fa-users"></i>
+                  </div>
+                  <h3 class="service-title h5">Family Medicine</h3>
+                  <p class="service-description">Comprehensive healthcare for your entire family across all ages</p>
+                  <div class="service-badge">Family Care</div>
+                </div>
+                <div class="service-card-back">
+                  <h4 class="h6">What We Offer:</h4>
+                  <ul>
+                    <li>Family health planning</li>
+                    <li>Routine check-ups</li>
+                    <li>Preventive care</li>
+                    <li>Health education</li>
+                  </ul>
+                  <button type="button" class="btn-book-specialty" data-specialty="Family Medicine" aria-label="Book appointment for Family Medicine">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ophthalmology -->
+          <div class="col-md-6 col-lg-4" data-specialty="Ophthalmology">
+            <div class="service-card h-100">
+              <div class="service-card-inner">
+                <div class="service-card-front">
+                  <div class="service-icon" aria-hidden="true">
+                    <i class="fas fa-eye"></i>
+                  </div>
+                  <h3 class="service-title h5">Ophthalmology</h3>
+                  <p class="service-description">Comprehensive eye care, vision tests, and treatment for eye conditions</p>
+                  <div class="service-badge">Eye Care</div>
+                </div>
+                <div class="service-card-back">
+                  <h4 class="h6">What We Offer:</h4>
+                  <ul>
+                    <li>Eye examinations and vision tests</li>
+                    <li>Glaucoma and cataract screening</li>
+                    <li>Treatment for eye infections</li>
+                    <li>Prescription glasses and contact lenses</li>
+                  </ul>
+                  <button type="button" class="btn-book-specialty" data-specialty="Ophthalmology" aria-label="Book appointment for Ophthalmology">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Orthopedics -->
+          <div class="col-md-6 col-lg-4" data-specialty="Orthopedics">
+            <div class="service-card h-100">
+              <div class="service-card-inner">
+                <div class="service-card-front">
+                  <div class="service-icon" aria-hidden="true">
+                    <i class="fas fa-bone"></i>
+                  </div>
+                  <h3 class="service-title h5">Orthopedics</h3>
+                  <p class="service-description">Expert care for bones, joints, muscles, and sports injuries</p>
+                  <div class="service-badge">Bone & Joint Care</div>
+                </div>
+                <div class="service-card-back">
+                  <h4 class="h6">What We Offer:</h4>
+                  <ul>
+                    <li>Joint pain and arthritis treatment</li>
+                    <li>Sports injury management</li>
+                    <li>Fracture and sprain care</li>
+                    <li>Physical therapy referrals</li>
+                  </ul>
+                  <button type="button" class="btn-book-specialty" data-specialty="Orthopedics" aria-label="Book appointment for Orthopedics">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Obstetrics and Gynecology -->
+          <div class="col-md-6 col-lg-4" data-specialty="Obstetrics and Gynecology">
+            <div class="service-card h-100">
+              <div class="service-card-inner">
+                <div class="service-card-front">
+                  <div class="service-icon" aria-hidden="true">
+                    <i class="fas fa-female"></i>
+                  </div>
+                  <h3 class="service-title h5">Obstetrics and Gynecology</h3>
+                  <p class="service-description">Complete women's health care, pregnancy care, and reproductive wellness</p>
+                  <div class="service-badge">Women's Health</div>
+                </div>
+                <div class="service-card-back">
+                  <h4 class="h6">What We Offer:</h4>
+                  <ul>
+                    <li>Prenatal and pregnancy care</li>
+                    <li>Annual well-woman exams</li>
+                    <li>Family planning and contraception</li>
+                    <li>Menopause management</li>
+                  </ul>
+                  <button type="button" class="btn-book-specialty" data-specialty="Obstetrics and Gynecology" aria-label="Book appointment for Obstetrics and Gynecology">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ENT -->
+          <div class="col-md-6 col-lg-4" data-specialty="ENT">
+            <div class="service-card h-100">
+              <div class="service-card-inner">
+                <div class="service-card-front">
+                  <div class="service-icon" aria-hidden="true">
+                    <i class="fas fa-head-side-cough"></i>
+                  </div>
+                  <h3 class="service-title h5">ENT</h3>
+                  <p class="service-description">Specialized care for ear, nose, and throat conditions and allergies</p>
+                  <div class="service-badge">Ear, Nose & Throat</div>
+                </div>
+                <div class="service-card-back">
+                  <h4 class="h6">What We Offer:</h4>
+                  <ul>
+                    <li>Ear infection treatment</li>
+                    <li>Allergy and sinus care</li>
+                    <li>Hearing tests and evaluation</li>
+                    <li>Tonsillitis and throat conditions</li>
+                  </ul>
+                  <button type="button" class="btn-book-specialty" data-specialty="ENT" aria-label="Book appointment for ENT">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pathology -->
+          <div class="col-md-6 col-lg-4" data-specialty="Pathology">
+            <div class="service-card h-100">
+              <div class="service-card-inner">
+                <div class="service-card-front">
+                  <div class="service-icon" aria-hidden="true">
+                    <i class="fas fa-microscope"></i>
+                  </div>
+                  <h3 class="service-title h5">Pathology</h3>
+                  <p class="service-description">Advanced laboratory testing and disease diagnosis services</p>
+                  <div class="service-badge">Lab Services</div>
+                </div>
+                <div class="service-card-back">
+                  <h4 class="h6">What We Offer:</h4>
+                  <ul>
+                    <li>Blood tests</li>
+                    <li>Biopsy analysis</li>
+                    <li>Laboratory diagnostics</li>
+                    <li>Disease screening</li>
+                  </ul>
+                  <button type="button" class="btn-book-specialty" data-specialty="Pathology" aria-label="Book appointment for Pathology">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+<!-- CHAT CTA SECTION -->
+<section id="chat" class="py-5" style="background: linear-gradient(135deg, #f0fafa 0%, #e8f8f7 100%);" aria-labelledby="chatCtaHeading">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7dd3c9,#4a9d96);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;flex-shrink:0;box-shadow:0 4px 16px rgba(74,157,150,0.3);">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h2 class="fw-bold mb-0" id="chatCtaHeading">Chat with a Doctor</h2>
+        </div>
+        <p class="text-muted mb-4" style="max-width:520px;">Not sure about your symptoms? Our automated doctor chat helps you understand your concern, guides you through questions, and tells you whether you need an appointment — all in seconds.</p>
+        <div class="d-flex flex-wrap gap-3 mb-4">
+          <div class="d-flex align-items-center gap-2" style="font-size:0.88rem;font-weight:600;color:#4a9d96;">
+            <i class="fas fa-check-circle"></i> 13 Specialist Doctors
+          </div>
+          <div class="d-flex align-items-center gap-2" style="font-size:0.88rem;font-weight:600;color:#4a9d96;">
+            <i class="fas fa-check-circle"></i> Instant Automated Responses
+          </div>
+          <div class="d-flex align-items-center gap-2" style="font-size:0.88rem;font-weight:600;color:#4a9d96;">
+            <i class="fas fa-check-circle"></i> Available 24 / 7
+          </div>
+        </div>
+        <a href="chat.html" class="btn btn-custom" style="display:inline-flex;align-items:center;gap:8px;">
+          <i class="fas fa-comments"></i> Start a Chat
+        </a>
+      </div>
+      <div class="col-lg-5">
+        <div style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 10px 40px rgba(74,157,150,0.12);border:1.5px solid rgba(125,211,201,0.2);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(125,211,201,0.15);">
+            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7dd3c9,#4a9d96);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:0.85rem;">GM</div>
+            <div>
+              <div style="font-weight:800;font-size:0.88rem;color:#50372c;">Dr. Maria Santos</div>
+              <div style="font-size:0.72rem;color:#22c55e;font-weight:600;"><i class="fas fa-circle" style="font-size:6px"></i> General Medicine &nbsp;&#8226;&nbsp; Available</div>
+            </div>
+          </div>
+          <div style="background:#f0fafa;border-radius:14px 14px 14px 4px;padding:12px 14px;font-size:0.82rem;color:#50372c;margin-bottom:10px;border:1px solid rgba(125,211,201,0.15);">
+            Hello! What is your main concern today?
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+            <span style="border:1.5px solid #7dd3c9;border-radius:20px;padding:5px 12px;font-size:0.75rem;font-weight:600;color:#4a9d96;">🤒 Fever / Flu</span>
+            <span style="border:1.5px solid #7dd3c9;border-radius:20px;padding:5px 12px;font-size:0.75rem;font-weight:600;color:#4a9d96;">😣 Body Pain</span>
+            <span style="border:1.5px solid #7dd3c9;border-radius:20px;padding:5px 12px;font-size:0.75rem;font-weight:600;color:#4a9d96;">😴 Fatigue</span>
+          </div>
+          <div style="background:linear-gradient(135deg,#7dd3c9,#4a9d96);border-radius:14px 14px 4px 14px;padding:10px 14px;font-size:0.82rem;color:#fff;text-align:right;margin-left:40px;">
+            I have a fever for 3 days 🤒
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING SECTION -->
+<section id="booking" class="booking-section py-5 text-white" aria-labelledby="bookingHeading">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold" id="bookingHeading">Book an Appointment</h2>
+      <p>Schedule your visit with our experienced doctors</p>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <form id="appointmentForm" class="p-4 bg-white text-dark rounded shadow" aria-labelledby="bookingHeading" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="doctorSelect" class="form-label">
+                Choose Doctor <span class="text-danger" aria-hidden="true">*</span>
+                <span class="visually-hidden">Required field</span>
+              </label>
+              <select class="form-select" id="doctorSelect" required aria-required="true" aria-describedby="doctorHelp">
+                <option value="">Select Doctor</option>
+                <!-- Options loaded dynamically -->
+              </select>
+              <div id="doctorHelp" class="form-text">Choose from our available specialists</div>
+            </div>
+            <div class="col-md-6">
+              <label for="appointmentDate" class="form-label">
+                Choose Date <span class="text-danger" aria-hidden="true">*</span>
+                <span class="visually-hidden">Required field</span>
+              </label>
+              <input type="date" class="form-control" id="appointmentDate" required aria-required="true" aria-describedby="dateHelp">
+              <div id="dateHelp" class="form-text">Select a date within the next 3 months</div>
+            </div>
+            <div class="col-md-6">
+              <label for="appointmentTime" class="form-label">
+                Choose Time <span class="text-danger" aria-hidden="true">*</span>
+                <span class="visually-hidden">Required field</span>
+              </label>
+              <select class="form-select" id="appointmentTime" required aria-required="true" aria-describedby="timeHelp">
+                <option value="">Choose Time</option>
+                <!-- Options loaded dynamically -->
+              </select>
+              <div id="timeHelp" class="form-text">Available time slots based on doctor's schedule</div>
+            </div>
+            <div class="col-md-6">
+              <label for="patientName" class="form-label">
+                Full Name <span class="text-danger" aria-hidden="true">*</span>
+                <span class="visually-hidden">Required field</span>
+              </label>
+              <input type="text" class="form-control" id="patientName" placeholder="Enter your full name" required aria-required="true" minlength="2" aria-describedby="nameHelp">
+              <div id="nameHelp" class="form-text">Enter your complete name as it appears on your ID</div>
+            </div>
+            <div class="col-md-6">
+              <label for="patientPhone" class="form-label">
+                Phone Number <span class="text-danger" aria-hidden="true">*</span>
+                <span class="visually-hidden">Required field</span>
+              </label>
+              <input type="tel" class="form-control" id="patientPhone" 
+                     placeholder="09XX XXX XXXX" 
+                     required 
+                     aria-describedby="phoneHelp">
+              <div id="phoneHelp" class="form-text">Philippine mobile number format: 09XX XXX XXXX</div>
+            </div>
+            <div class="col-md-6">
+              <label for="patientEmail" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="patientEmail" placeholder="example@email.com" aria-describedby="emailHelp">
+              <div id="emailHelp" class="form-text">We'll send confirmation to this email</div>
+            </div>
+            <div class="col-12">
+              <label for="appointmentReason" class="form-label">Reason for Visit</label>
+              <textarea class="form-control" id="appointmentReason" rows="3" placeholder="Describe your symptoms or concerns" aria-describedby="reasonHelp"></textarea>
+              <div id="reasonHelp" class="form-text">Please provide details to help us prepare for your visit</div>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="privacyConsent" required aria-required="true">
+                <label class="form-check-label" for="privacyConsent">
+                  I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a> and consent to the collection of my personal information for appointment purposes.
+                </label>
+              </div>
+            </div>
+            
+            <!-- BUTTONS - ONLY ONE SET -->
+            <div class="col-12 text-center">
+              <button type="submit" class="btn btn-custom mt-3" id="submitAppointmentBtn" aria-label="Submit appointment request">
+                Submit Appointment
+              </button>
+              <button type="button" class="btn btn-custom mt-3 ms-2" id="checkAppointmentBtn" aria-label="Check existing appointment">
+                <i class="fas fa-calendar-check me-1"></i> My Appointments
+              </button>
+            </div>
+            
+            <!-- REGISTRATION LINK -->
+            <div class="col-12 text-center mt-3">
+              <p class="text-muted mb-0">
+                New to MedLink? <a href="register.html" class="text-primary fw-bold">Create an Account</a>
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CANCEL APPOINTMENT SECTION (Hidden by default) -->
+<section id="cancelAppointment" class="py-4 bg-light" style="display: none;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Check & Cancel Appointment</h5>
+            <button type="button" class="btn-close" id="closeCancelSection" aria-label="Close"></button>
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-3">Enter your details to check for existing appointments.</p>
+            <form id="checkAppointmentForm">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="checkName" class="form-label">Full Name <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="checkName" placeholder="Enter your full name" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="checkPhone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                  <input type="tel" class="form-control" id="checkPhone" placeholder="09XX XXX XXXX" required>
+                </div>
+                <!-- Add Reason Field -->
+                <div class="col-12">
+                  <label for="cancellationReason" class="form-label">Cancellation Reason (Optional)</label>
+                  <textarea class="form-control" id="cancellationReason" rows="3" placeholder="Please let us know why you're cancelling your appointment..."></textarea>
+                  <div class="form-text">This helps us improve our services.</div>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-warning w-100" id="checkAppointmentSubmitBtn">
+                    <i class="fas fa-search me-1"></i> Check for Appointments
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div id="checkResult" class="mt-4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- ABOUT SECTION (DYNAMIC CONTENT) -->
+    <section id="about" class="py-5" aria-labelledby="aboutHeading">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-6">
+            <div class="about-icon-container">
+              <div class="about-icon shadow-lg" aria-hidden="true">
+                <i class="fas fa-hospital-alt"></i>
+              </div>
+              <div class="about-icon-glow"></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h2 class="fw-bold mb-4" id="aboutHeading">About MedLink Clinic</h2>
+            <div class="about-content">
+              <p class="lead mb-3" id="aboutSubheading">Your Trusted Healthcare Partner in Marikina</p>
+              <p class="text-muted mb-3" id="aboutDescription">At MedLink Clinic, we are dedicated to providing exceptional healthcare services tailored to meet the unique needs of our community. Our commitment extends beyond treatment to encompass comprehensive wellness and preventive care.</p>
+              <div class="about-features" id="aboutFeatures" role="list" aria-label="Clinic features">
+                <!-- Features will be loaded dynamically from Firebase -->
+                <div class="feature-item" role="listitem">
+                  <i class="fas fa-check-circle text-primary" aria-hidden="true"></i>
+                  <span>Experienced Medical Professionals</span>
+                </div>
+                <div class="feature-item" role="listitem">
+                  <i class="fas fa-check-circle text-primary" aria-hidden="true"></i>
+                  <span>Modern Medical Equipment</span>
+                </div>
+                <div class="feature-item" role="listitem">
+                  <i class="fas fa-check-circle text-primary" aria-hidden="true"></i>
+                  <span>Patient-Centered Care</span>
+                </div>
+                <div class="feature-item" role="listitem">
+                  <i class="fas fa-check-circle text-primary" aria-hidden="true"></i>
+                  <span>Comprehensive Healthcare Services</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-5 bg-light" aria-labelledby="contactHeading">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="fw-bold" id="contactHeading">Contact Us</h2>
+          <p class="text-muted">We'd love to hear from you</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-4 text-center">
+            <i class="fas fa-map-marker-alt fa-2x text-primary mb-3" aria-hidden="true"></i>
+            <h3 class="h5 fw-bold">Our Address</h3>
+            <p class="text-muted" id="contactAddress">123 Healthcare St., Marikina, Philippines</p>
+          </div>
+          <div class="col-md-4 text-center">
+            <i class="fas fa-phone fa-2x text-primary mb-3" aria-hidden="true"></i>
+            <h3 class="h5 fw-bold">Call Us</h3>
+            <p class="text-muted" id="contactPhone">+63 905 517 7314</p>
+          </div>
+          <div class="col-md-4 text-center">
+            <i class="fas fa-envelope fa-2x text-primary mb-3" aria-hidden="true"></i>
+            <h3 class="h5 fw-bold">Email Us</h3>
+            <p class="text-muted" id="contactEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4c25222a2362212928202522272f202522252f0c2b212d2520622f2321">[email&#160;protected]</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<!-- FOOTER (DYNAMIC CONTENT) -->
+<footer class="py-4 text-white" style="background: var(--bg-gradient)">
+    <div class="container text-center">
+        <div class="mb-3">
+            <a href="https://facebook.com/karl.go.73" class="social-icon me-2" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.instagram.com/karlll_go/" class="social-icon me-2" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://x.com/xPulds" class="social-icon me-2" aria-label="X">
+                <i class="fab fa-twitter"></i>
+            </a>
+        </div>
+        <p class="mb-0" id="footerCopyright">2025 MedLink Clinic. All rights reserved.</p>
+        <p class="mb-0 small">
+            <a href="#" class="text-white text-decoration-underline" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a> | 
+            <a href="#" class="text-white text-decoration-underline" data-bs-toggle="modal" data-bs-target="#termsModal">Terms of Service</a>
+        </p>
+    </div>
+</footer>
+
+  <!-- PRIVACY POLICY MODAL -->
+  <div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="privacyModalLabel">Privacy Policy</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>MedLink Clinic is committed to protecting your privacy. We collect personal information only for the purpose of scheduling appointments and providing healthcare services.</p>
+          <h6>Information We Collect:</h6>
+          <ul>
+            <li>Name and contact information</li>
+            <li>Medical history and symptoms</li>
+            <li>Appointment preferences</li>
+          </ul>
+          <h6>How We Use Your Information:</h6>
+          <ul>
+            <li>Schedule and manage appointments</li>
+            <li>Provide medical services</li>
+            <li>Send appointment reminders</li>
+            <li>Improve our services</li>
+          </ul>
+          <p>We do not share your personal information with third parties without your consent, except as required by law.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMS OF SERVICE MODAL -->
+  <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="termsModalLabel">Terms of Service</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>By using our online appointment system, you agree to the following terms:</p>
+          <h6>Appointment Booking:</h6>
+          <ul>
+            <li>Appointments are subject to doctor availability</li>
+            <li>We reserve the right to reschedule if necessary</li>
+            <li>Please arrive 15 minutes before your scheduled time</li>
+          </ul>
+          <h6>Cancellation Policy:</h6>
+          <ul>
+            <li>24-hour notice required for cancellations</li>
+            <li>Repeated no-shows may affect future bookings</li>
+          </ul>
+          <h6>Service Limitations:</h6>
+          <ul>
+            <li>Online booking is for non-emergency appointments</li>
+            <li>For emergencies, please visit immediately or call</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-white d-flex justify-content-center align-items-center" style="z-index: 9999; display: none !important;">
+    <div class="text-center">
+      <div class="spinner-border text-primary mb-3" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Loading MedLink Clinic...</p>
+    </div>
+  </div>
+
+
+
+<!-- ── Patient Session Styles ── -->
+<style>
+  /* Sign In / Sign Up nav buttons */
+  .nav-btn-login {
+    border: 1.5px solid rgba(255,255,255,0.55) !important;
+    border-radius: 50px !important;
+    padding: 7px 18px !important;
+    font-weight: 700 !important;
+    font-size: 0.88rem !important;
+    color: rgba(255,255,255,0.9) !important;
+    transition: all 0.25s !important;
+  }
+  .nav-btn-login:hover {
+    background: rgba(255,255,255,0.15) !important;
+    color: #fff !important;
+  }
+  .nav-btn-signup {
+    background: rgba(255,255,255,0.22) !important;
+    border-radius: 50px !important;
+    padding: 7px 18px !important;
+    font-weight: 700 !important;
+    font-size: 0.88rem !important;
+    color: #fff !important;
+    border: 1.5px solid rgba(255,255,255,0.4) !important;
+    transition: all 0.25s !important;
+  }
+  .nav-btn-signup:hover {
+    background: rgba(255,255,255,0.32) !important;
+    color: #fff !important;
+    transform: translateY(-1px);
+  }
+
+  /* Patient avatar in nav */
+  .patient-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 0.75rem; font-weight: 800;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(255,255,255,0.5);
+  }
+
+  /* Dropdown */
+  .patient-dropdown {
+    border: none !important;
+    border-radius: 16px !important;
+    box-shadow: 0 16px 48px rgba(74,157,150,0.2), 0 4px 16px rgba(0,0,0,0.08) !important;
+    padding: 8px !important;
+    min-width: 240px !important;
+    margin-top: 8px !important;
+    overflow: hidden;
+  }
+  .dropdown-header-custom {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 12px 10px;
+  }
+  .dh-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(135deg, #7dd3c9, #4a9d96);
+    color: #fff; font-weight: 800; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .dh-name { font-weight: 800; font-size: 0.92rem; color: #50372c; }
+  .dh-email { font-size: 0.75rem; color: #94a3b8; }
+  .patient-dropdown .dropdown-item {
+    border-radius: 10px !important;
+    padding: 9px 12px !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    color: #50372c !important;
+    transition: background 0.2s !important;
+  }
+  .patient-dropdown .dropdown-item:hover {
+    background: rgba(125,211,201,0.12) !important;
+    color: #4a9d96 !important;
+  }
+  .patient-dropdown .dropdown-item.text-danger { color: #ef4444 !important; }
+  .patient-dropdown .dropdown-item.text-danger:hover { background: rgba(239,68,68,0.08) !important; }
+  .patient-dropdown .dropdown-divider { margin: 4px 8px !important; border-color: rgba(125,211,201,0.2) !important; }
+
+  /* Welcome toast */
+  #welcomeToast {
+    position: fixed; top: 80px; right: 20px; z-index: 9999;
+    background: linear-gradient(135deg, #5bc0b5, #4a9d96);
+    color: #fff; padding: 14px 20px;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(74,157,150,0.35);
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 0.92rem; font-weight: 600;
+    max-width: 320px;
+    transform: translateX(120%);
+    transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  #welcomeToast.show { transform: translateX(0); }
+  #welcomeToast .wt-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; font-weight: 800; flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.4);
+  }
+  #welcomeToast .wt-close {
+    background: none; border: none; color: rgba(255,255,255,0.7);
+    cursor: pointer; font-size: 0.9rem; padding: 2px;
+    margin-left: auto; transition: color 0.2s;
+  }
+  #welcomeToast .wt-close:hover { color: #fff; }
+</style>
+
+<!-- Welcome Toast (injected, shown on login redirect) -->
+<div id="welcomeToast">
+  <div class="wt-avatar" id="wtAvatar">P</div>
+  <div>
+    <div style="font-size:0.78rem;opacity:0.85;">Signed in successfully</div>
+    <div id="wtName">Welcome!</div>
+  </div>
+  <button class="wt-close" onclick="dismissWelcome()"><i class="fas fa-times"></i></button>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<!-- ADD THIS - Email Service -->
+<script src="email-service.js"></script>
+
+<!-- firebase-config + main script -->
+<script src="firebase-config.js"></script>
+<script src="script.js"></script>
+
+<!-- ── Patient Session Script ── -->
+<script>
+(function() {
+  function initPatientSession() {
+    const raw = sessionStorage.getItem('medlink_user');
+    if (!raw) return; // not logged in — show guest buttons
+
+    try {
+      const user = JSON.parse(raw);
+      const firstName = user.firstName || user.fullName.split(' ')[0] || 'Patient';
+      const fullName  = user.fullName  || firstName;
+      const email     = user.email     || '';
+      const initials  = (firstName[0] + (user.lastName ? user.lastName[0] : '')).toUpperCase();
+
+      // Hide guest, show patient nav
+      document.getElementById('navGuest').style.display  = 'none';
+      document.getElementById('navPatient').style.display = 'block';
+
+      // Populate nav
+      document.getElementById('navAvatar').textContent      = initials;
+      document.getElementById('navPatientName').textContent = firstName;
+
+      // Populate dropdown
+      document.getElementById('dropAvatar').textContent   = initials;
+      document.getElementById('dropFullName').textContent = fullName;
+      document.getElementById('dropEmail').textContent    = email;
+
+      // Show welcome toast only on first visit after login
+      if (sessionStorage.getItem('medlink_welcomed') !== '1') {
+        sessionStorage.setItem('medlink_welcomed', '1');
+        const toast = document.getElementById('welcomeToast');
+        document.getElementById('wtAvatar').textContent = initials;
+        document.getElementById('wtName').textContent   = 'Welcome back, ' + firstName + '!';
+        setTimeout(() => { toast.classList.add('show'); }, 600);
+        setTimeout(() => { toast.classList.remove('show'); }, 5000);
+      }
+    } catch(e) { console.error('Session parse error:', e); }
+  }
+
+  function patientLogout() {
+    sessionStorage.removeItem('medlink_user');
+    sessionStorage.removeItem('medlink_welcomed');
+    window.location.replace('landing.html');
+  }
+  window.patientLogout = patientLogout;
+
+  function dismissWelcome() {
+    document.getElementById('welcomeToast').classList.remove('show');
+  }
+  window.dismissWelcome = dismissWelcome;
+
+  // Run after DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPatientSession);
+  } else {
+    initPatientSession();
+  }
+})();
+</script>
+
+</body>
+</html>
